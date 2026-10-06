@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* CUSTOM CSS — keep in @layer base so Tailwind utilities can override */
+@theme {
+  --font-heading: "Inter", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+
+  /*
+   * Brand palette — drawn from student portraits (cobalt walls, sunny folders,
+   * mustard knits). Overrides Tailwind blue/yellow so existing utilities
+   * (bg-blue-700, text-yellow-500, …) stay in sync across light & dark themes.
+   */
+
+  /* Cobalt blue — student1 / student4 studio walls */
+  --color-blue-50: #f0f6fc;
+  --color-blue-100: #dce9f8;
+  --color-blue-200: #b9d2f0;
+  --color-blue-300: #8ab1e3;
+  --color-blue-400: #6394d6;
+  --color-blue-500: #3d76c6;
+  --color-blue-600: #285faf;
+  --color-blue-700: #20509b;
+  --color-blue-800: #12346e;
+  --color-blue-900: #08214e;
+  --color-blue-950: #041536;
+
+  /* Golden yellow — student7 backdrop / student8 sweater / notebook accents */
+  --color-yellow-50: #fff9eb;
+  --color-yellow-100: #fff1cc;
+  --color-yellow-200: #ffe299;
+  --color-yellow-300: #ffd05c;
+  --color-yellow-400: #fdc035;
+  --color-yellow-500: #f4ae17;
+  --color-yellow-600: #d9940c;
+  --color-yellow-700: #b8760a;
+  --color-yellow-800: #955e0f;
+  --color-yellow-900: #7a4d12;
+  --color-yellow-950: #462a08;
+
+  /* Surfaces & type — for floating glass UI (navbar, pills) */
+  --color-bg: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef3fa;
+  --color-line: #e2e8f2;
+  --color-ink: #1a2332;
+  --color-muted: #2f3b4d;
+  --color-faint: #93a0b4;
+
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-soft:
+    0 8px 24px rgba(8, 33, 78, 0.08), 0 2px 6px rgba(8, 33, 78, 0.04);
+  --shadow-lift:
+    0 16px 40px rgba(8, 33, 78, 0.14), 0 6px 14px rgba(8, 33, 78, 0.08);
+  --shadow-brand: 0 10px 28px rgba(32, 80, 155, 0.32);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blue-700) transparent;
+}
+
+/* WebKit scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-blue-700);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-blue-600);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+html.dark {
+  --color-bg: #060d1a;
+  --color-surface: #0c1528;
+  --color-surface-2: #152238;
+  --color-line: #1e2f4a;
+  --color-ink: #e8eef7;
+  --color-muted: #c5d0e3;
+  --color-faint: #6b7d99;
+  --shadow-soft:
+    0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-lift:
+    0 18px 44px rgba(0, 0, 0, 0.55), 0 8px 16px rgba(0, 0, 0, 0.36);
+  --shadow-brand: 0 10px 28px rgba(61, 118, 198, 0.4);
+}
+
+html.dark body {
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+@layer base {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .glass {
+    background: color-mix(in oklab, var(--color-bg) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  .brand-gradient {
+    background-image: linear-gradient(
+      140deg,
+      #08214e 0%,
+      #20509b 52%,
+      #3d76c6 100%
+    );
+  }
+
+  /* Elevated form controls — readable against dark modal panels */
+  .form-field {
+    border: 1px solid rgb(229 231 235 / 0.7);
+    background-color: rgb(255 255 255 / 0.95);
+    color: rgb(17 24 39);
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .form-field::placeholder {
+    color: rgb(156 163 175);
+  }
+
+  .form-field:hover {
+    border-color: rgb(209 213 219);
+  }
+
+  .form-field:focus,
+  .form-field:focus-within {
+    border-color: rgb(59 130 246);
+    background-color: rgb(255 255 255);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.15);
+  }
+
+  .dark .form-field {
+    border-color: rgb(255 255 255 / 0.14);
+    background-color: #152238;
+    color: rgb(243 244 246);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
+
+  .dark .form-field::placeholder {
+    color: rgb(148 163 184);
+  }
+
+  .dark .form-field:hover {
+    border-color: rgb(255 255 255 / 0.24);
+    background-color: #182842;
+  }
+
+  .dark .form-field:focus,
+  .dark .form-field:focus-within {
+    border-color: rgb(96 165 250);
+    background-color: #1a2c48;
+    box-shadow:
+      0 0 0 3px rgb(96 165 250 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+
+  .dark input.form-field:-webkit-autofill,
+  .dark input.form-field:-webkit-autofill:hover,
+  .dark input.form-field:-webkit-autofill:focus,
+  .dark textarea.form-field:-webkit-autofill {
+    -webkit-text-fill-color: rgb(243 244 246);
+    caret-color: rgb(243 244 246);
+    transition: background-color 99999s ease-in-out 0s;
+    box-shadow: 0 0 0 1000px #152238 inset;
+  }
+
+  /* Layered cobalt atmosphere — hero, campuses, etc. */
+  .brand-atmosphere {
+    background:
+      linear-gradient(to top, rgba(4, 21, 54, 0.55) 0%, transparent 38%),
+      radial-gradient(
+        ellipse 50% 45% at 95% 100%,
+        rgba(244, 174, 23, 0.18) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 70% 55% at 72% 42%,
+        rgba(61, 118, 198, 0.35) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 90% 70% at 8% -10%,
+        rgba(99, 148, 214, 0.45) 0%,
+        transparent 55%
+      ),
+      linear-gradient(
+        165deg,
+        #041536 0%,
+        #08214e 28%,
+        #12346e 58%,
+        #1a4a8c 82%,
+        #20509b 100%
+      );
+  }
+
+  .brand-atmosphere::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Featured achievement panel — cinematic cobalt + gold */
+  .featured-panel {
+    --fp-a: 12%;
+    --fp-b: 88%;
+    --fp-c: 70%;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        ellipse 90% 80% at var(--fp-a) 15%,
+        rgba(253, 192, 53, 0.28) 0%,
+        transparent 52%
+      ),
+      radial-gradient(
+        ellipse 70% 90% at var(--fp-b) 85%,
+        rgba(99, 148, 214, 0.55) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 55% 60% at 40% var(--fp-c),
+        rgba(32, 80, 155, 0.9) 0%,
+        transparent 60%
+      ),
+      linear-gradient(
+        125deg,
+        #041536 0%,
+        #08214e 32%,
+        #12346e 58%,
+        #20509b 82%,
+        #3d76c6 100%
+      );
+    animation: featured-panel-drift 16s ease-in-out infinite alternate;
+  }
+
+  .featured-panel::after {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    background: conic-gradient(
+      from 210deg at 70% 40%,
+      transparent 0deg,
+      rgba(244, 174, 23, 0.12) 40deg,
+      transparent 90deg,
+      rgba(185, 210, 240, 0.1) 160deg,
+      transparent 220deg
+    );
+    animation: featured-panel-spin 28s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured-panel {
+      animation: none;
+    }
+    .featured-panel::after {
+      animation: none;
+    }
+  }
+}
+
+
+
+@property --fp-a {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 12%;
+}
+@property --fp-b {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 88%;
+}
+@property --fp-c {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 70%;
+}
+
+@keyframes featured-panel-drift {
+  0% {
+    --fp-a: 12%;
+    --fp-b: 88%;
+    --fp-c: 70%;
+  }
+  50% {
+    --fp-a: 28%;
+    --fp-b: 72%;
+    --fp-c: 45%;
+  }
+  100% {
+    --fp-a: 8%;
+    --fp-b: 95%;
+    --fp-c: 58%;
+  }
+}
+
+@keyframes featured-panel-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.container {
+  width: 96%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 92%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: 74%;
+  }
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile nav — inspired by flip-down stagger (animation3) */
+.mobile-nav-menu {
+  perspective: 350px;
+}
+
+.mobile-nav-item {
+  animation: mobileNavFlipIn 300ms ease forwards;
+  transform: rotateX(90deg);
+  opacity: 0;
+  transform-origin: top;
+}
+
+.mobile-nav-item:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.mobile-nav-item:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+.mobile-nav-item:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+.mobile-nav-item:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+.mobile-nav-item:nth-child(6) {
+  animation-delay: 500ms;
+}
+
+.mobile-nav-item:nth-child(7) {
+  animation-delay: 600ms;
+}
+
+@keyframes mobileNavFlipIn {
+  to {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* Soft Y bounce — one hop every 4s */
+@keyframes bounce-y {
+  0%,
+  8%,
+  100% {
+    transform: translateY(0);
+  }
+
+  2% {
+    transform: translateY(-10px);
+  }
+
+  4% {
+    transform: translateY(0);
+  }
+
+  6% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-y {
+  animation: bounce-y 4s ease-in-out infinite;
+}
+

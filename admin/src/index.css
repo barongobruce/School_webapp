@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-soft:
+    0 12px 32px rgba(8, 33, 78, 0.12), 0 4px 10px rgba(8, 33, 78, 0.06);
+  --shadow-lift:
+    0 16px 40px rgba(8, 33, 78, 0.14), 0 6px 14px rgba(8, 33, 78, 0.08);
+  --shadow-brand: 0 12px 32px rgba(32, 80, 155, 0.4);
+}
+
+html.dark {
+  --shadow-soft:
+    0 12px 34px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.32);
+  --shadow-lift:
+    0 18px 44px rgba(0, 0, 0, 0.55), 0 8px 16px rgba(0, 0, 0, 0.36);
+  --shadow-brand: 0 14px 36px rgba(61, 118, 198, 0.5);
+}
+
+@layer components {
+  .brand-gradient {
+    background-image: linear-gradient(
+      140deg,
+      #08214e 0%,
+      #20509b 52%,
+      #3d76c6 100%
+    );
+  }
+
+  .radius-brand {
+    border-radius: 1.5rem 0.5rem 1.5rem 0.5rem;
+  }
+
+  .radius-brand-sm {
+    border-radius: 1.2rem 0.4rem 1.2rem 0.4rem;
+  }
+
+  .radius-brand-lg {
+    border-radius: 2rem 0.7rem 2rem 0.7rem;
+  }
+
+  /* Elevated form controls — readable against dark modal panels */
+  .form-field {
+    border: 1px solid rgb(229 231 235 / 0.7);
+    background-color: rgb(255 255 255 / 0.95);
+    color: rgb(17 24 39);
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .form-field::placeholder {
+    color: rgb(156 163 175);
+  }
+
+  .form-field:hover {
+    border-color: rgb(209 213 219);
+  }
+
+  .form-field:focus,
+  .form-field:focus-within {
+    border-color: rgb(59 130 246);
+    background-color: rgb(255 255 255);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.15);
+  }
+
+  .dark .form-field {
+    border-color: rgb(255 255 255 / 0.14);
+    background-color: #152238;
+    color: rgb(243 244 246);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
+
+  .dark .form-field::placeholder {
+    color: rgb(148 163 184);
+  }
+
+  .dark .form-field:hover {
+    border-color: rgb(255 255 255 / 0.24);
+    background-color: #182842;
+  }
+
+  .dark .form-field:focus,
+  .dark .form-field:focus-within {
+    border-color: rgb(96 165 250);
+    background-color: #1a2c48;
+    box-shadow:
+      0 0 0 3px rgb(96 165 250 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+
+  .dark input.form-field:-webkit-autofill,
+  .dark input.form-field:-webkit-autofill:hover,
+  .dark input.form-field:-webkit-autofill:focus,
+  .dark textarea.form-field:-webkit-autofill {
+    -webkit-text-fill-color: rgb(243 244 246);
+    caret-color: rgb(243 244 246);
+    transition: background-color 99999s ease-in-out 0s;
+    box-shadow: 0 0 0 1000px #152238 inset;
+  }
+}
