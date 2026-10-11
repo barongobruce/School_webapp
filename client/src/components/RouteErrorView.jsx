@@ -96,7 +96,7 @@ const RouteErrorView = ({
               </span>
               <div className='min-w-0'>
                 <p className='truncate text-[15px] font-semibold tracking-tight text-gray-900 dark:text-white'>
-                  ADESUA
+                  BARONGO
                 </p>
                 <p className='text-[11px] font-medium tracking-[0.08em] text-gray-400 uppercase dark:text-gray-500'>
                   {brandHint}

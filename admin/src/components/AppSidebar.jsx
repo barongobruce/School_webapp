@@ -75,7 +75,7 @@ const AppSidebar = () => {
       >
         <img
           src={LogoSm}
-          alt='Adesua'
+          alt='Barongo'
           className='size-7 shrink-0 object-contain'
           style={{ borderRadius: '0.55rem 0.2rem 0.55rem 0.2rem' }}
         />
@@ -83,7 +83,7 @@ const AppSidebar = () => {
         {isSidebarOpen && (
           <span className='min-w-0'>
             <span className='block truncate text-[13px] font-bold tracking-[-0.02em] text-gray-900 uppercase dark:text-white'>
-              Adesua
+              Barongo
             </span>
             <span className='block truncate text-[10px] font-medium tracking-[0.06em] text-gray-400 uppercase'>
               Admin

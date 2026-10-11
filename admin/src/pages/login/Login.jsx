@@ -128,7 +128,7 @@ const Login = () => {
             Admin workspace
           </p>
           <h1 className='mt-2 text-[2rem] font-bold tracking-[-0.03em] text-[#08214e] dark:text-white'>
-            ADESUA
+            BARONGO
           </h1>
           <p className='mx-auto mt-2 max-w-xs text-[13px] leading-relaxed text-gray-500 dark:text-gray-400'>
             Sign in to manage school operations.

@@ -50,7 +50,7 @@ const getRouteMeta = (pathname) => {
     }
   }
 
-  return { title: 'Adesua', subtitle: 'Admin workspace', crumb: null }
+  return { title: 'Barongo', subtitle: 'Admin workspace', crumb: null }
 }
 
 const formatToday = () =>

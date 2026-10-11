@@ -91,7 +91,7 @@ const Login = () => {
               </span>
               <span className='min-w-0'>
                 <span className='block text-[13px] font-bold tracking-[-0.02em] uppercase'>
-                  Adesua
+                  Barongo
                 </span>
                 <span className='block text-[10px] font-medium tracking-[0.06em] text-white/55 uppercase'>
                   Achiever
@@ -159,7 +159,7 @@ const Login = () => {
               </span>
               <span className='min-w-0'>
                 <span className='block text-[13px] font-bold tracking-[-0.02em] text-ink uppercase dark:text-white'>
-                  Adesua
+                  Barongo
                 </span>
                 <span className='block text-[10px] font-medium tracking-[0.06em] text-faint uppercase'>
                   Achiever

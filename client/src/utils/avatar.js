@@ -1,6 +1,6 @@
 /**
  * Builds initials from first and last name for use as a profile avatar.
- * e.g. "Ernest" + "Acheiver" → "EA"
+ * e.g. "Barongo" + "Academy" → "BA"
  */
 export const getInitials = (firstName = '', lastName = '') => {
   const first = String(firstName || '').trim().charAt(0)

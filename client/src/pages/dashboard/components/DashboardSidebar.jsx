@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
         {isSidebarOpen && (
           <span className='min-w-0 shrink'>
             <span className='block truncate text-[13px] font-bold tracking-[-0.02em] text-gray-900 uppercase dark:text-white'>
-              Adesua
+              BARONGO
             </span>
             <span className='block truncate text-[10px] font-medium tracking-[0.06em] text-gray-400 uppercase'>
               Achiever

@@ -78,7 +78,7 @@ const Footer = () => {
           </span>
           <span className='text-left'>
             <span className='font-heading block text-lg font-bold tracking-tight text-ink'>
-              ADESUA
+              BARONGO
             </span>
             <span className='mt-0.5 block text-[10px] font-semibold tracking-[0.14em] text-muted uppercase'>
               Brighter Future
