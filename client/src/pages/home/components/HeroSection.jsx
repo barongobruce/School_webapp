@@ -15,7 +15,7 @@ const HeroSection = () => {
             For Your Kids
           </h1>
           <p className='mx-auto mt-3 max-w-md text-xs font-semibold leading-relaxed text-white/90 sm:mt-2 sm:text-sm md:text-base lg:mx-0'>
-            At ADESUA Academy, we nurture curious minds, build strong character,
+            At Barongo Academy, we nurture curious minds, build strong character,
             and prepare every child for a brighter tomorrow.
           </p>
           <div className='mt-7 flex w-full flex-col items-stretch gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:justify-start'>
@@ -40,16 +40,16 @@ const HeroSection = () => {
 
         <article className='grid h-64 w-full max-w-[18rem] flex-1 grid-cols-2 gap-3 sm:h-80 sm:max-w-md sm:gap-5 md:h-96 md:max-w-lg lg:h-auto lg:max-w-none lg:gap-6 lg:py-8 xl:gap-8'>
           <div className='h-full w-full overflow-hidden bg-blue-900/40 ring-1 ring-white/10 rounded-full'>
-            <img src={HeroImage1} alt='ADESUA Academy student' />
+            <img src={HeroImage1} alt='Barongo Academy student' />
           </div>
           <div className='h-full w-full overflow-hidden bg-blue-900/40 ring-1 ring-white/10 rounded-tl-[50%] rounded-tr-3xl rounded-bl-3xl rounded-br-[50%]'>
-            <img src={HeroImage2} alt='ADESUA Academy graduate' />
+            <img src={HeroImage2} alt='Barongo Academy graduate' />
           </div>
           <div className='h-full w-full overflow-hidden bg-blue-900/40 ring-1 ring-white/10 rounded-3xl'>
-            <img src={HeroImage3} alt='ADESUA Academy student in class' />
+            <img src={HeroImage3} alt='Barongo Academy student in class' />
           </div>
           <div className='h-full w-full overflow-hidden bg-blue-900/40 ring-1 ring-white/10 rounded-tl-[50%] rounded-tr-3xl rounded-bl-3xl rounded-br-3xl'>
-            <img src={HeroImage4} alt='ADESUA Academy student' />
+            <img src={HeroImage4} alt='Barongo Academy student' />
           </div>
         </article>
       </div>

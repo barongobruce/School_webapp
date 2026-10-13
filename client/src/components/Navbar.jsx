@@ -86,13 +86,7 @@ const Navbar = () => {
               <span className='font-heading truncate text-[1.05rem] font-bold tracking-tight'>
                 BARONGO
               </span>
-              <span className='hidden truncate text-[0.65rem] font-semibold tracking-[0.08em] text-gray-400 uppercase sm:inline'>
-                Brighter Future
-              </span>
             </Link>
-              </span>
-            </Link>
-
             <nav className='absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 lg:flex'>
               {navLinks.map((link) => (
                 <Link
