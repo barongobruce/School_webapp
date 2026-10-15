@@ -22,77 +22,74 @@ const tabRadius = { borderRadius: '1.4rem 0.45rem 1.4rem 0.45rem' }
 
 const schoolBranchesData = [
   {
-    id: 'accra',
-    region: 'Greater Accra',
-    cities: 'Tema & Accra',
+    id: 'Kasarani',
+    region: 'Kasarani',
     schools: [
       {
         level: 'elementary',
-        name: 'Egator Elementary School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Kasarani Elementary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
         level: 'middle',
-        name: 'Egator Middle School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Kasarani Primary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
         level: 'high',
-        name: 'Egator High School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Kasarani High School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
     ],
   },
   {
-    id: 'volta',
-    region: 'Volta Region',
-    cities: 'Keta',
+    id: 'Thika',
+    region: 'Thika',
     schools: [
       {
         level: 'elementary',
-        name: 'Volta Elementary School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Thika Elementary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
         level: 'middle',
-        name: 'Volta Middle School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Thika Primary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
         level: 'high',
-        name: 'Volta High School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Thika High School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
     ],
   },
   {
-    id: 'eastern',
-    region: 'Eastern Region',
-    cities: 'Koforidua',
+    id: 'Rongai',
+    region: 'Rongai',
     schools: [
       {
         level: 'elementary',
-        name: 'Koftown Elementary School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Rongai Elementary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
-        level: 'middle',
-        name: 'Koftown Middle School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        level: 'Primary',
+        name: 'Rongai Primary School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
       {
         level: 'high',
-        name: 'Koftown High School',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
+        name: 'Rongai High School',
+        phone: '(254) 712-345678',
+        tel: '+254712345678',
       },
     ],
   },
@@ -108,12 +105,11 @@ const SchoolBranches = () => {
       <div className='container relative z-10'>
         <header className='mx-auto max-w-2xl text-center'>
           <h2 className='font-heading text-[clamp(1.85rem,3.5vw,2.75rem)] font-black tracking-tight text-white'>
-            Campuses Across Ghana
+            Branches Across Kenya
           </h2>
           <p className='text-sm font-semibold leading-relaxed text-white/90 md:text-base'>
-            Joyful, high-quality schools from transitional kindergarten to
-            tertiary — serving families in Greater Accra, Volta, and the Eastern
-            Region.
+            High-quality school branches from kindergarten to primary to High school
+            serving families in Nairobi region.
           </p>
         </header>
 
@@ -169,7 +165,7 @@ const SchoolBranches = () => {
 
         <div className='mt-14 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center'>
           <p className='text-xs font-semibold text-white/90 md:text-sm'>
-            Not sure which campus fits your family?
+            Not sure which branch fits your family?
           </p>
           <Button
             to='/contact'

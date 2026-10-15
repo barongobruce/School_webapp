@@ -20,16 +20,6 @@ import AboutHeaderImage from '../../assets/about-header.jpg'
 import StoryImageA from '../../assets/student6.jpg'
 import StoryImageB from '../../assets/activity1.jpg'
 import HeadOfSchoolImage from '../../assets/board11.jpg'
-import Board1 from '../../assets/board1.jpg'
-import Board2 from '../../assets/board2.jpg'
-import Board5 from '../../assets/board5.jpg'
-import Board6 from '../../assets/board6.jpg'
-import Board9 from '../../assets/board9.jpg'
-import Board10 from '../../assets/board10.jpg'
-import Staff3 from '../../assets/board3.jpg'
-import Staff4 from '../../assets/board4.jpg'
-import Staff7 from '../../assets/board7.jpg'
-import Staff8 from '../../assets/board8.jpg'
 
 /* ------------------------------------------------------------------ */
 /* Radii — TL · TR · BR · BL                                           */
@@ -50,143 +40,10 @@ const radius = {
 /* ------------------------------------------------------------------ */
 
 const stats = [
-    { value: '1998', label: 'Founded in Egator' },
-    { value: '2,400+', label: 'Students across Ghana' },
+    { value: '2000', label: 'Founded in Nairobi' },
+    { value: '5,400+', label: 'Students across Kenya' },
     { value: '190+', label: 'Educators & mentors' },
-    { value: '3', label: 'Campuses, nine schools' },
-]
-
-const values = [
-    {
-        icon: Users,
-        title: 'Diversity',
-        description:
-            'Every background, faith, and ability is welcomed here — difference is something we learn from, not merely tolerate.',
-    },
-    {
-        icon: Award,
-        title: 'Quality & improvement',
-        description:
-            'We measure ourselves honestly, invest in our teachers, and refuse to let “good enough” be the standard for any child.',
-    },
-    {
-        icon: HeartHandshake,
-        title: 'Collegiality',
-        description:
-            'Teachers, families, and staff work as one team. When adults collaborate openly, children learn to do the same.',
-    },
-    {
-        icon: Compass,
-        title: 'Leadership',
-        description:
-            'From class prefects to quiz captains, every learner gets real responsibility — and the coaching to carry it well.',
-    },
-    {
-        icon: ShieldCheck,
-        title: 'Integrity',
-        description:
-            'We do the right thing when no one is watching, and we expect the same of every student who wears our colors.',
-    },
-    {
-        icon: Lightbulb,
-        title: 'Curiosity',
-        description:
-            'Questions are celebrated before answers. Wonder is the engine of every laboratory, library, and studio we run.',
-    },
-]
-
-const boardMembers = [
-    {
-        image: Board1,
-        name: 'Mr. Daniel Haddad',
-        role: 'Chair of the Board',
-        focus: 'Strategy & Governance',
-    },
-    {
-        image: Board2,
-        name: 'Mrs. Vera Ansah-Quaye',
-        role: 'Vice Chair',
-        focus: 'Academic Standards',
-    },
-    {
-        image: Board5,
-        name: 'Mrs. Isabella Fiadjoe',
-        role: 'Trustee',
-        focus: 'Finance & Audit',
-    },
-    {
-        image: Board10,
-        name: 'Mr. Thomas Reindorf',
-        role: 'Trustee',
-        focus: 'Legal & Compliance',
-    },
-    {
-        image: Board6,
-        name: 'Ms. Amina Suleiman',
-        role: 'Trustee',
-        focus: 'Community & Inclusion',
-    },
-    {
-        image: Board9,
-        name: 'Mr. Nathan Cheng',
-        role: 'Trustee',
-        focus: 'Technology & Innovation',
-    },
-]
-
-const seniorStaff = [
-    {
-        image: Staff8,
-        name: 'Ms. Selina Ho',
-        role: 'Head of Guidance & Counselling',
-        note: 'Champions student wellbeing across all three campuses.',
-    },
-    {
-        image: Staff4,
-        name: 'Coach Marco Vieira',
-        role: 'Director of Athletics',
-        note: 'Built the track programme behind our regional gold medals.',
-    },
-    {
-        image: Staff3,
-        name: 'Ms. Louisa Hammond',
-        role: 'Director of Creative Arts',
-        note: 'Leads the ensembles honored at the National Cultural Festival.',
-    },
-    {
-        image: Staff7,
-        name: 'Mr. Elias Darko',
-        role: 'Head of Music & Performance',
-        note: 'Turns first-time performers into confident stage presences.',
-    },
-]
-
-const milestones = [
-    {
-        year: '1998',
-        title: 'ADESUA opens its doors',
-        description: 'One classroom in Egator, 42 students, and a promise to their parents.',
-    },
-    {
-        year: '2008',
-        title: 'Volta campus opens',
-        description: 'Our second home brings elementary through high school to the Volta region.',
-    },
-    {
-        year: '2016',
-        title: 'Koftown campus opens',
-        description: 'Three campuses, nine schools — one shared standard of care.',
-    },
-    {
-        year: '2023',
-        title: 'National debate title',
-        description: 'Our debaters win on the national secondary stage for the first time.',
-    },
-    {
-        year: '2025',
-        title: 'NSMQ national champions',
-        description: 'ADESUA lifts the National Science & Maths Quiz trophy.',
-    },
+    { value: '3', label: 'Branches' },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -260,24 +117,23 @@ const StorySection = () => (
                 <Reveal>
                     <span className='inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700 dark:text-blue-300'>
                         <Sparkles className='size-3.5' strokeWidth={2.5} />
-                        Our story · Since 1998
+                        Our story · Since 2000
                     </span>
                     <h2 className='font-heading mt-3 text-[clamp(1.85rem,3.5vw,2.75rem)] font-black leading-[1.1] tracking-tight text-ink'>
-                        Rooted in Ghana,
+                        Rooted in Kenya,
                         <br />
                         built for the world.
                     </h2>
                     <p className='mt-5 text-sm font-semibold leading-relaxed text-ink md:text-base'>
-                        ADESUA Academy began in 1998 with a single classroom in
-                        Egator and a conviction our founders refused to
+                        Barongo Academy began in 2000 with a single classroom in
+                        Nairobi and a conviction our founders refused to
                         compromise: every child deserves teachers who know
                         their name, their story, and their potential.
                     </p>
                     <p className='mt-4 text-sm font-semibold leading-relaxed text-muted md:text-base'>
                         Nearly three decades later, that one classroom has
-                        grown into three campuses and nine schools across
-                        Ghana — yet the promise has not changed. We pair
-                        rigorous academics with character formation, so our
+                        grown into three branches across
+                        Kenya — yet the promise has not changed. Our
                         graduates leave not only with results, but with
                         direction.
                     </p>
@@ -299,7 +155,7 @@ const StorySection = () => (
                         >
                             <img
                                 src={StoryImageA}
-                                alt='ADESUA Academy student on campus'
+                                alt='Barongo Academy student on campus'
                                 className='!h-full !w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.03]'
                             />
                             <div className='absolute inset-0 bg-gradient-to-t from-[#08214e]/40 via-transparent to-transparent' />
@@ -311,7 +167,7 @@ const StorySection = () => (
                             >
                                 <img
                                     src={StoryImageB}
-                                    alt='ADESUA Academy students at play'
+                                    alt='Barongo Academy students at play'
                                     className='!h-full !w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.04]'
                                 />
                             </div>
@@ -320,7 +176,7 @@ const StorySection = () => (
                                 style={radius.card}
                             >
                                 <span className='font-heading text-3xl font-black tracking-tight md:text-4xl'>
-                                    27
+                                    26
                                 </span>
                                 <span className='mt-1 text-xs font-semibold leading-snug text-white/85'>
                                     years of shaping curious minds and strong
@@ -359,41 +215,38 @@ const MissionVisionValues = () => (
         <div className='container relative'>
             <SectionHeading
                 eyebrow='What guides us'
-                title='Mission, vision & the values in between'
-                description='These are not wall posters. They are the standards every teacher, trustee, and student at ADESUA is held to.'
+                title='Our mission, vision, values & motto'
             />
 
-            <div className='mt-14 grid gap-6 lg:grid-cols-2'>
+            <div className='mt-14 grid auto-rows-fr items-stretch gap-6 md:grid-cols-2'>
                 <Reveal className='h-full'>
                     <article
-                        className='featured-panel relative flex h-full flex-col justify-center overflow-hidden px-8 py-10 text-white sm:px-10 md:py-12'
+                        className='featured-panel flex h-full min-h-[18rem] flex-col justify-center px-8 py-10 text-white sm:px-10 md:py-12'
                         style={radius.panel}
                     >
-                        <div className='relative z-10'>
-                            <span
-                                className='grid size-12 place-items-center bg-yellow-400 text-[#1a1a1a] shadow-[var(--shadow-soft)]'
-                                style={radius.chip}
-                            >
-                                <Target className='size-6' strokeWidth={2} />
-                            </span>
-                            <h3 className='font-heading mt-6 text-2xl font-black tracking-tight md:text-3xl'>
-                                Our mission
-                            </h3>
-                            <p className='mt-4 max-w-lg text-sm font-semibold leading-relaxed text-white/90 md:text-base'>
-                                To give every child in our care a rigorous
-                                education and an unshakeable sense of self —
-                                nurturing curious minds, building strong
-                                character, and preparing each learner to serve
-                                their community and compete anywhere in the
-                                world.
-                            </p>
-                        </div>
+                        <span
+                            className='grid size-12 place-items-center bg-yellow-400 text-[#1a1a1a] shadow-[var(--shadow-soft)]'
+                            style={radius.chip}
+                        >
+                            <Target className='size-6' strokeWidth={2} />
+                        </span>
+                        <h3 className='font-heading mt-6 text-2xl font-black tracking-tight md:text-3xl'>
+                            Our mission
+                        </h3>
+                        <p className='mt-4 max-w-lg text-sm font-semibold leading-relaxed text-white/90 md:text-base'>
+                            To give every child in our care a rigorous
+                            education and an unshakeable sense of self —
+                            nurturing curious minds, building strong
+                            character, and preparing each learner to serve
+                            their community and compete anywhere in the
+                            world.
+                        </p>
                     </article>
                 </Reveal>
 
                 <Reveal delay={0.1} className='h-full'>
                     <article
-                        className='flex h-full flex-col justify-center border border-line bg-surface px-8 py-10 shadow-[var(--shadow-soft)] sm:px-10 md:py-12'
+                        className='flex h-full min-h-[18rem] flex-col justify-center border border-line bg-surface px-8 py-10 shadow-[var(--shadow-soft)] sm:px-10 md:py-12'
                         style={radius.panel}
                     >
                         <span
@@ -406,48 +259,58 @@ const MissionVisionValues = () => (
                             Our vision
                         </h3>
                         <p className='mt-4 max-w-lg text-sm font-semibold leading-relaxed text-ink md:text-base'>
-                            To be West Africa’s most trusted family of schools —
-                            a place where excellence is ordinary, kindness is
+                            To be Kenya’s most trusted family of schools — a
+                            place where excellence is ordinary, kindness is
                             expected, and every graduate leaves ready to lead
                             with both competence and conscience.
                         </p>
                     </article>
                 </Reveal>
-            </div>
 
-            <ul className='mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                {values.map((value, index) => {
-                    const Icon = value.icon
-                    return (
-                        <Reveal
-                            key={value.title}
-                            delay={0.05 * index}
-                            className='h-full'
+                <Reveal delay={0.15} className='h-full'>
+                    <article
+                        className='flex h-full min-h-[18rem] flex-col justify-center border border-line bg-surface px-8 py-10 shadow-[var(--shadow-soft)] sm:px-10 md:py-12'
+                        style={radius.panel}
+                    >
+                        <span
+                            className='grid size-12 place-items-center bg-blue-50 text-blue-700 shadow-[var(--shadow-soft)] dark:bg-blue-500/15 dark:text-blue-300'
+                            style={radius.chip}
                         >
-                            <li
-                                className='group flex h-full flex-col border border-line bg-surface p-7 shadow-[var(--shadow-soft)] transition-all duration-300 ease-spring hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(8,33,78,0.14)]'
-                                style={radius.card}
-                            >
-                                <span
-                                    className='grid size-11 place-items-center bg-blue-50 text-blue-700 transition-colors duration-300 group-hover:bg-blue-700 group-hover:text-white dark:bg-blue-500/15 dark:text-blue-300 dark:group-hover:bg-blue-600 dark:group-hover:text-white'
-                                    style={radius.icon}
-                                >
-                                    <Icon className='size-5' strokeWidth={1.75} />
-                                </span>
-                                <h4 className='font-heading mt-5 text-lg font-bold tracking-tight text-ink'>
-                                    {value.title}
-                                </h4>
-                                <p className='mt-2 text-sm font-semibold leading-relaxed text-muted'>
-                                    {value.description}
-                                </p>
-                            </li>
-                        </Reveal>
-                    )
-                })}
-            </ul>
+                            <HeartHandshake className='size-6' strokeWidth={2} />
+                        </span>
+                        <h3 className='font-heading mt-6 text-2xl font-black tracking-tight text-ink md:text-3xl'>
+                            Our values
+                        </h3>
+                        <p className='mt-4 max-w-lg text-sm font-semibold leading-relaxed text-muted md:text-base'>
+                            Integrity and respect, excellence in learning and teaching, care and well-being, collaboration with families, inclusivity, and global awareness.
+                        </p>
+                    </article>
+                </Reveal>
+
+                <Reveal delay={0.2} className='h-full'>
+                    <article
+                        className='featured-panel flex h-full min-h-[18rem] flex-col justify-center px-8 py-10 text-white sm:px-10 md:py-12'
+                        style={radius.panel}
+                    >
+                        <span
+                            className='grid size-12 place-items-center bg-yellow-400 text-[#1a1a1a] shadow-[var(--shadow-soft)]'
+                            style={radius.chip}
+                        >
+                            <Sparkles className='size-6' strokeWidth={2} />
+                        </span>
+                        <h3 className='font-heading mt-6 text-2xl font-black tracking-tight md:text-3xl'>
+                            Our motto
+                        </h3>
+                        <p className='mt-4 text-xl font-bold leading-relaxed text-white md:text-2xl'>
+                            To the Uttermost
+                        </p>
+                    </article>
+                </Reveal>
+            </div>
         </div>
     </section>
 )
+
 
 const HeadOfSchool = () => (
     <section className='featured-panel relative w-full overflow-hidden py-20 md:py-28'>
@@ -465,7 +328,7 @@ const HeadOfSchool = () => (
                     >
                         <img
                             src={HeadOfSchoolImage}
-                            alt='Dr. Naana Owusu-Ansah, Head of School at ADESUA Academy'
+                            alt='Dr. Naana Owusu-Ansah, Head of School at Barongo Academy'
                             className='!h-full !w-full object-cover'
                         />
                         <div className='absolute inset-0 bg-gradient-to-t from-[#041536]/60 via-transparent to-transparent' />
@@ -474,7 +337,7 @@ const HeadOfSchool = () => (
                             style={radius.chip}
                         >
                             <p className='font-heading text-sm font-bold text-white'>
-                                Dr. Naana Owusu-Ansah
+                                Dr. Selina Amos
                             </p>
                             <p className='text-xs font-semibold text-white/80'>
                                 Head of School · Since 2015
@@ -515,164 +378,18 @@ const HeadOfSchool = () => (
                             style={radius.chip}
                         >
                             <GraduationCap className='size-4' strokeWidth={2} />
-                            Ed.D., Educational Leadership
+                            PHD., Educational Leadership
                         </span>
                         <span
                             className='inline-flex items-center gap-2 border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur-sm'
                             style={radius.chip}
                         >
                             <MapPin className='size-4' strokeWidth={2} />
-                            28 years in Ghanaian education
+                            20 years in Kenyan education
                         </span>
                     </div>
                 </Reveal>
             </div>
-        </div>
-    </section>
-)
-
-const BoardSection = () => (
-    <section className='relative w-full overflow-hidden bg-surface py-20 md:py-24'>
-        <div
-            aria-hidden='true'
-            className='pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,rgba(61,118,198,0.07),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(61,118,198,0.16),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(61,118,198,0.16),transparent_70%)]'
-        />
-        <div className='container relative'>
-            <SectionHeading
-                eyebrow='Governance'
-                title='The Board of Governors'
-                description='Six volunteers who hold the school to its promise — overseeing standards, finances, and the long-term health of every campus.'
-            />
-
-            <ul className='mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7'>
-                {boardMembers.map((member, index) => (
-                    <Reveal
-                        key={member.name}
-                        delay={0.05 * index}
-                        className='h-full'
-                    >
-                        <li
-                            className='group relative h-full overflow-hidden bg-blue-100 shadow-[0_16px_40px_rgba(8,33,78,0.12)] dark:bg-blue-950 dark:shadow-[0_16px_40px_rgba(0,0,0,0.4)] dark:bg-blue-950 dark:shadow-[0_16px_40px_rgba(0,0,0,0.4)]'
-                            style={radius.card}
-                        >
-                            <div className='relative aspect-[4/5]'>
-                                <img
-                                    src={member.image}
-                                    alt={`${member.name}, ${member.role} at ADESUA Academy`}
-                                    className='!h-full !w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.05]'
-                                />
-                                <div className='absolute inset-0 bg-gradient-to-t from-[#041536]/90 via-[#08214e]/25 to-transparent' />
-                            </div>
-                            <div className='absolute right-0 bottom-0 left-0 p-6'>
-                                <span
-                                    className='inline-flex items-center bg-yellow-400 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-ink'
-                                    style={radius.chip}
-                                >
-                                    {member.focus}
-                                </span>
-                                <h3 className='font-heading mt-3 text-lg font-bold tracking-tight text-white'>
-                                    {member.name}
-                                </h3>
-                                <p className='mt-0.5 text-xs font-semibold text-white/80'>
-                                    {member.role}
-                                </p>
-                            </div>
-                        </li>
-                    </Reveal>
-                ))}
-            </ul>
-        </div>
-    </section>
-)
-
-const StaffSection = () => (
-    <section className='relative w-full overflow-hidden bg-surface-2/60 py-20 md:py-24'>
-        <div className='container relative'>
-            <SectionHeading
-                eyebrow='The people your child will know'
-                title='Senior staff & campus leads'
-                description='Beyond the classroom, these are the specialists shaping wellbeing, sport, music, and the arts across our campuses.'
-            />
-
-            <ul className='mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
-                {seniorStaff.map((person, index) => (
-                    <Reveal
-                        key={person.name}
-                        delay={0.05 * index}
-                        className='h-full'
-                    >
-                        <li
-                            className='group flex h-full flex-col border border-line bg-surface p-4 shadow-[var(--shadow-soft)] transition-all duration-300 ease-spring hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(8,33,78,0.14)]'
-                            style={radius.card}
-                        >
-                            <div
-                                className='relative aspect-square overflow-hidden bg-blue-100 dark:bg-blue-950'
-                                style={radius.media}
-                            >
-                                <img
-                                    src={person.image}
-                                    alt={`${person.name}, ${person.role} at ADESUA Academy`}
-                                    className='!h-full !w-full object-cover transition-transform duration-700 ease-spring group-hover:scale-[1.05]'
-                                />
-                            </div>
-                            <div className='flex flex-1 flex-col px-2 pt-5 pb-3'>
-                                <h3 className='font-heading text-base font-bold tracking-tight text-ink'>
-                                    {person.name}
-                                </h3>
-                                <p className='mt-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300'>
-                                    {person.role}
-                                </p>
-                                <p className='mt-3 text-xs font-semibold leading-relaxed text-muted md:text-sm'>
-                                    {person.note}
-                                </p>
-                            </div>
-                        </li>
-                    </Reveal>
-                ))}
-            </ul>
-
-            <Reveal delay={0.15} className='mt-12 text-center'>
-                <p className='text-xs font-semibold text-muted md:text-sm'>
-                    190+ educators and support staff work across our three
-                    campuses — these are just a few of the faces your family
-                    will meet first.
-                </p>
-            </Reveal>
-        </div>
-    </section>
-)
-
-const Milestones = () => (
-    <section className='relative w-full overflow-hidden bg-surface py-20 md:py-24'>
-        <div className='container relative'>
-            <SectionHeading
-                eyebrow='Milestones'
-                title='27 years, five defining moments'
-                description='A short history of how one classroom in Egator became a family of schools trusted across Ghana.'
-            />
-
-            <ol className='relative mx-auto mt-14 max-w-3xl space-y-10 border-l-2 border-line pl-8 md:mt-20 md:max-w-none md:grid md:grid-cols-5 md:gap-8 md:space-y-0 md:border-t-2 md:border-l-0 md:pt-10 md:pl-0'>
-                {milestones.map((milestone, index) => (
-                    <li key={milestone.year} className='relative'>
-                        <span
-                            aria-hidden='true'
-                            className='absolute top-1 -left-[2.45rem] grid size-5 place-items-center border-4 border-surface bg-blue-700 shadow-[var(--shadow-soft)] md:-top-[3.35rem] md:left-0'
-                            style={radius.dot}
-                        />
-                        <Reveal delay={0.06 * index}>
-                            <span className='font-heading text-2xl font-black tracking-tight text-blue-800 dark:text-blue-300'>
-                                {milestone.year}
-                            </span>
-                            <h3 className='font-heading mt-2 text-base font-bold tracking-tight text-ink'>
-                                {milestone.title}
-                            </h3>
-                            <p className='mt-1.5 text-xs font-semibold leading-relaxed text-muted md:text-sm'>
-                                {milestone.description}
-                            </p>
-                        </Reveal>
-                    </li>
-                ))}
-            </ol>
         </div>
     </section>
 )
@@ -720,16 +437,13 @@ const AboutPage = () => {
     return (
         <main>
             <PageHeader
-                title='About ADESUA Academy'
-                description='Three campuses, nine schools, one promise — every child is seen, stretched, and supported toward a brighter tomorrow.'
+                title='About  BARONGO  Academy'
+                description='Three branches, one promise — every child is seen, stretched, and supported toward a brighter tomorrow.'
                 backgroundImage={AboutHeaderImage}
             />
             <StorySection />
             <MissionVisionValues />
             <HeadOfSchool />
-            <BoardSection />
-            <StaffSection />
-            <Milestones />
             <ClosingCta />
         </main>
     )

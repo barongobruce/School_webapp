@@ -118,7 +118,7 @@ const getRouteMeta = (pathname) => {
     }
   }
 
-  return { title: 'Adesua', subtitle: 'School workspace', crumb: null }
+  return { title: 'BARONGO', subtitle: 'School workspace', crumb: null }
 }
 
 const formatToday = () =>

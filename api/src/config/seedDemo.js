@@ -1060,8 +1060,8 @@ async function seedVipAccounts(ctx, hashedPassword) {
     const vipStudentUser = await upsertUser(
         VIP.studentEmail,
         {
-            firstName: 'Ernest',
-            lastName: 'Egator',
+            firstName: 'Barongo',
+            lastName: 'Bruce',
             role: 'student',
             gender: 'male',
             photo: portrait('male', 45),
@@ -1138,8 +1138,8 @@ async function seedVipAccounts(ctx, hashedPassword) {
             def: {
                 email: VIP.studentEmail,
                 classCode: 'G10B',
-                firstName: 'Ernest',
-                lastName: 'Egator',
+                firstName: 'Barongo',
+                lastName: 'Bruce',
             },
         },
     ];

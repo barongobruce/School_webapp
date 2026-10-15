@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const AdminModel = require('../models/admin.model.js');
 
 const DEFAULT_ADMIN = {
-    firstName: 'Ernest',
-    lastName: 'Acheiver',
+    firstName: 'Barongo',
+    lastName: 'Bruce',
     email: 'brosnanbarongo@gmail.com',
     password: 'bruce123',
     role: 'admin',
@@ -17,9 +17,16 @@ const seedAdmin = async () => {
         const existingAdmin = await AdminModel.findOne({ email: DEFAULT_ADMIN.email });
 
         if (existingAdmin) {
-            console.log(`👤 Admin already exists: ${existingAdmin.email}`);
-            return existingAdmin;
-        }
+    existingAdmin.firstName = DEFAULT_ADMIN.firstName;
+    existingAdmin.lastName = DEFAULT_ADMIN.lastName;
+    await existingAdmin.save();
+
+    console.log(
+        `👤 Updated admin name: ${existingAdmin.firstName} ${existingAdmin.lastName}`
+    );
+    return existingAdmin;
+}
+
 
         const hashedPassword = await bcrypt.hash(DEFAULT_ADMIN.password, 10);
 

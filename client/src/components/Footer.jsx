@@ -62,7 +62,7 @@ const Footer = () => {
           to='/'
           className='mx-auto mb-1 block w-28 transition-opacity duration-200 hover:opacity-80 dark:hidden'
         >
-          <img src={Logo} alt='ADESUA Academy' className='!h-auto !w-full object-contain' />
+          <img src={Logo} alt='BARONGO Academy' className='!h-auto !w-full object-contain' />
         </Link>
         <Link
           to='/'
@@ -83,7 +83,7 @@ const Footer = () => {
           </span>
         </Link>
         <p className='mt-2 max-w-sm text-xs font-semibold leading-relaxed text-muted md:text-sm'>
-          Nurturing curious minds across Ghana — from kindergarten to tertiary.
+          Nurturing curious minds across Kenya — from kindergarten to highschool.
         </p>
 
         <nav
@@ -129,7 +129,7 @@ const Footer = () => {
 
       <div className='relative mt-12 border-t border-line'>
         <small className='mx-auto block py-5 text-center text-xs font-semibold text-muted md:text-sm'>
-          &copy; {new Date().getFullYear()} ADESUA Academy. All rights reserved.
+          &copy; {new Date().getFullYear()} Barongo Academy. All rights reserved.
         </small>
       </div>
     </footer>

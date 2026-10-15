@@ -6,7 +6,7 @@ const ErrorPage = () => (
     brandHint='School portal'
     homeTo='/'
     homeLabel='Back home'
-    notFoundMessage='This page doesn’t exist on the Adesua site — or it may have moved.'
+    notFoundMessage='This page doesn’t exist on the BARONGO site — or it may have moved.'
   />
 )
 

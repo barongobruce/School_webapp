@@ -14,7 +14,7 @@ const normalizeIdType = (value = '') => {
         drivers_license: "Driver's License",
         "driver's_license": "Driver's License",
         "driver's license": "Driver's License",
-        ghana_card: 'National ID',
+        Kenya_card: 'National ID',
         national_id: 'National ID',
         'national id': 'National ID',
         other: 'Other',

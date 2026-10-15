@@ -16,43 +16,43 @@ const accentRadius = { borderRadius: '0.5rem 0.15rem 0.5rem 0.15rem' }
 
 const testimonials = [
   {
-    id: 'ama',
+    id: 'Selina',
     quote:
-      'My daughter came home excited about science for the first time. ADESUA did not just teach her — they lit something lasting.',
-    name: 'Abena S.',
-    role: 'Parent · Tema Campus',
+      'My daughter came home excited about science for the first time. Barongo Academy did not just teach her — they lit something lasting.',
+    name: 'Selina A.',
+    role: 'Parent · Thika Campus',
     image: studentA,
   },
   {
-    id: 'kofi',
+    id: 'John',
     quote:
       'Teachers here notice the quiet students too. I went from shy in class to leading our debate team in one year.',
-    name: 'Kofi A.',
+    name: 'John K.',
     role: 'Student · High School',
     image: studentB,
   },
   {
-    id: 'efua',
+    id: 'Chillion',
     quote:
-      'Choosing ADESUA was the best decision we made. The care, the standards, and the community feel like family.',
-    name: 'Efua D.',
-    role: 'Parent · Koforidua',
+      'Choosing Barongo Academy was the best decision we made. The care, the standards, and the community feel like family.',
+    name: 'Chillion B.',
+    role: 'Parent · Kasarani Campus',
     image: studentC,
   },
   {
-    id: 'yaw',
+    id: 'Bruce',
     quote:
       'Alumni week reminded me how deep these roots go. The mentors I met here still answer when I call.',
-    name: 'Yaw B.',
+    name: 'Marion T.',
     role: 'Alumnus · Class of 2023',
     image: studentD,
   },
   {
-    id: 'akosua',
+    id: 'Leah',
     quote:
       'Every morning feels purposeful. Staff greet students by name — that small thing builds confidence you carry all day.',
-    name: 'Akosua M.',
-    role: 'Teacher · Greater Accra',
+    name: 'Leah N.',
+    role: 'Teacher · Rongai Campus',
     image: studentE,
   },
 ]
@@ -91,7 +91,7 @@ const Testimonials = () => {
           </h2>
           <p className='mt-2 text-sm font-semibold leading-relaxed text-white/90 md:text-base'>
             Honest words from parents, students, teachers, and alumni who live
-            the ADESUA promise every day.
+            the BARONGO promise every day.
           </p>
         </header>
 
