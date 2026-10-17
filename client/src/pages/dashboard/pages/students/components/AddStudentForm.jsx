@@ -138,7 +138,7 @@ const AddStudentForm = () => {
             type='tel'
             value={form.emergencyContact}
             onChange={handleChange}
-            placeholder='+233 ...'
+            placeholder='+254 ...'
             className={inputClass}
           />
         </Field>
@@ -179,7 +179,7 @@ const AddStudentForm = () => {
             type='tel'
             value={form.phone}
             onChange={handleChange}
-            placeholder='+233 ...'
+            placeholder='+254 ...'
             className={inputClass}
           />
         </Field>
@@ -235,7 +235,7 @@ const AddStudentForm = () => {
             required
             value={form.parentPhone}
             onChange={handleChange}
-            placeholder='+233 ...'
+            placeholder='+254 ...'
             className={inputClass}
           />
         </Field>

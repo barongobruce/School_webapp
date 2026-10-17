@@ -71,7 +71,7 @@ const DashboardSidebar = () => {
               BARONGO
             </span>
             <span className='block truncate text-[10px] font-medium tracking-[0.06em] text-gray-400 uppercase'>
-              Achiever
+              Academy
             </span>
           </span>
         )}

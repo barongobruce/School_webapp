@@ -3,16 +3,10 @@ import {
     BookOpen,
     Bot,
     CalendarDays,
-    Camera,
     Drama,
     Flag,
     HeartHandshake,
-    Leaf,
-    Mic2,
     Music4,
-    Palette,
-    Puzzle,
-    Shield,
     Sparkles,
     Trophy,
     Users,
@@ -26,6 +20,9 @@ import SportsImage from '../../assets/New folder/pexels-cottonbro-7318726.jpg'
 import ArtsImage from '../../assets/New folder/activity2.jpg'
 import ClubsImage from '../../assets/New folder/pexels-tima-miroshnichenko-9572726.jpg'
 import LeadershipImage from '../../assets/New folder/pexels-zen-chung-5537533.jpg'
+import DramaImage from '../../assets/New folder/DramaImage.jpg'
+import ChristianUnionImage from '../../assets/christian-union.jpg'
+
 
 /* ------------------------------------------------------------------ */
 /* Radii — TL · TR · BR · BL                                           */
@@ -55,15 +52,15 @@ const pillars = [
         description:
             'Football, athletics, volleyball, and the dance squad — coached properly, played fairly, and celebrated loudly at inter-house and inter-school level.',
         image: SportsImage,
-        imageAlt: 'ADESUA Academy cheer and dance squad on the stands',
-        tags: ['Football', 'Track & Field', 'Volleyball', 'Dance Squad'],
+        imageAlt: 'Barongo Academy cheer and dance squad on the stands',
+        tags: ['Football', 'Track & Field', 'Volleyball',],
     },
     {
         title: 'Creative & Performing Arts',
         description:
             'Choir, traditional drumming, drama, and open studio afternoons. Students who create learn to see — and to be seen.',
         image: ArtsImage,
-        imageAlt: 'Young ADESUA pupil drawing in the art studio',
+        imageAlt: 'Young Barongo academy pupil drawing in the art studio',
         tags: ['Choir & Drumming', 'Drama', 'Art Studio', 'Spoken Word'],
     },
     {
@@ -71,102 +68,34 @@ const pillars = [
         description:
             'From robotics to readers, debate to chess — weekly sessions where curiosity gets time on the timetable and friendships form around ideas.',
         image: ClubsImage,
-        imageAlt: 'ADESUA students working together in the library',
+        imageAlt: 'Barongo  students working together in the library',
         tags: ['STEM & Robotics', 'Debate', 'Readers Guild', 'Chess'],
     },
+ {
+        title: 'Drama Club',
+        description:
+            'Formal drama training and performance opportunities for students interested in theatre.',
+        image: DramaImage,
+        imageAlt: 'Barongo  students working together in the library',
+        tags: ['Dance squad', 'Spoken word', 'drumming',],
+    },
+
     {
         title: 'Leadership & Service',
         description:
-            'Prefectship, the student council, and service projects in every region we call home. Responsibility is not given at ADESUA — it is practised.',
+            'Prefectship, the student council, and service projects in every region we call home. Responsibility is not given at Barongo  — it is practised.',
         image: LeadershipImage,
-        imageAlt: 'ADESUA student leader reviewing plans on a clipboard',
+        imageAlt: 'Barongo  student leader reviewing plans on a clipboard',
         tags: ['Student Council', 'Prefects', 'Community Service', 'Peer Mentoring'],
     },
-]
 
-const clubs = [
     {
-        icon: Mic2,
-        title: 'Debate & Public Speaking',
+        title: 'Christian Union',
         description:
-            'Weekly motions, regional contests, and the composure to hold a room — a skill for life, not just for trophies.',
-    },
-    {
-        icon: Bot,
-        title: 'STEM & Robotics',
-        description:
-            'Coding, robotics kits, and science fair projects. The training ground of our NSMQ champions.',
-    },
-    {
-        icon: Music4,
-        title: 'Choir & Traditional Drumming',
-        description:
-            'Four-part harmony meets kpanlogo and adowa rhythms — celebrated at the National Cultural Festival.',
-    },
-    {
-        icon: Drama,
-        title: 'Drama & Theatre',
-        description:
-            'Two full productions a year, plus storytelling workshops that build presence and empathy.',
-    },
-    {
-        icon: BookOpen,
-        title: 'Readers & Writers Guild',
-        description:
-            'Book clubs by age group, a student anthology every year, and authors invited each term.',
-    },
-    {
-        icon: Puzzle,
-        title: 'Chess & Strategy',
-        description:
-            'Openings, endgames, and patience. Our juniors took silver at the 2025 regional championships.',
-    },
-    {
-        icon: Camera,
-        title: 'Media & Photography',
-        description:
-            'The student crew behind our newsletters, event coverage, and the yearbook — cameras included.',
-    },
-    {
-        icon: Leaf,
-        title: 'Eco & Gardening Club',
-        description:
-            'School gardens on every campus, recycling drives, and tree-planting days with local communities.',
-    },
-]
-
-const houses = [
-    {
-        name: 'Aggrey House',
-        motto: 'Excellence in all things',
-        color: 'bg-red-500',
-        text: 'text-red-600',
-        description:
-            'Named for the great educator Dr. Kwegyir Aggrey — relentless on the track, sharper still in the quiz hall.',
-    },
-    {
-        name: 'Yaa Asantewaa House',
-        motto: 'Courage before comfort',
-        color: 'bg-yellow-400',
-        text: 'text-yellow-600 dark:text-yellow-400',
-        description:
-            'Carrying the warrior queen\u2019s name with pride — famous for its drumming ensemble and fearless debaters.',
-    },
-    {
-        name: 'Nkrumah House',
-        motto: 'Forward ever',
-        color: 'bg-green-500',
-        text: 'text-green-600',
-        description:
-            'The organisers — reigning Sports Day champions and the house behind our biggest service projects.',
-    },
-    {
-        name: 'Danquah House',
-        motto: 'Wisdom lights the way',
-        color: 'bg-blue-600',
-        text: 'text-blue-700 dark:text-blue-300',
-        description:
-            'Scholars and storytellers — home of the reading challenge trophy three years running.',
+            'A vibrant community of students committed to living out their faith and serving others.',
+        image: ChristianUnionImage,
+        imageAlt: 'Barongo  students singing and praying together in a group',
+        tags: ['Student Council', 'Prefects', 'Community Service', 'Peer Mentoring'],
     },
 ]
 
@@ -200,27 +129,6 @@ const terms = [
             { icon: Drama, name: 'Annual drama production', detail: 'The theatre ensemble\u2019s main stage' },
             { icon: HeartHandshake, name: 'Community service week', detail: 'Student-led projects in all three regions' },
         ],
-    },
-]
-
-const joinSteps = [
-    {
-        step: '01',
-        title: 'Explore at the Clubs Fair',
-        description:
-            'In week two of Term 1, every club and team sets up a stand. Students try things out before they commit — no pressure, all curiosity.',
-    },
-    {
-        step: '02',
-        title: 'Choose with a mentor',
-        description:
-            'Each student picks up to two activities with their mentor teacher, balancing interest, timetable, and a healthy stretch.',
-    },
-    {
-        step: '03',
-        title: 'Commit for the term',
-        description:
-            'Attendance counts and effort earns house points. Students may switch at term breaks — but they finish what they start.',
     },
 ]
 
@@ -291,7 +199,7 @@ const IntroSection = () => (
         />
         <div className='container relative'>
             <SectionHeading
-                eyebrow='Life at ADESUA'
+                eyebrow='Life at BARONGO Academy'
                 title='School does not end when the bell rings'
                 description='Grades open doors; character walks through them. Our co-curricular program is where children find their voice, their team, and very often, their calling.'
             />
@@ -318,7 +226,7 @@ const PillarsSection = () => (
     <section className='relative w-full overflow-hidden bg-surface-2/60 py-20 md:py-24'>
         <div className='container relative'>
             <SectionHeading
-                eyebrow='Four pillars'
+                eyebrow='Our activities'
                 title='Something for every kind of child'
                 description='Sporty or bookish, loud or quietly observant — every student finds a place where effort is noticed and talent is grown.'
             />
@@ -361,88 +269,6 @@ const PillarsSection = () => (
                     </Reveal>
                 ))}
             </div>
-        </div>
-    </section>
-)
-
-const ClubsSection = () => (
-    <section className='relative w-full overflow-hidden bg-surface py-20 md:py-24'>
-        <div className='container relative'>
-            <SectionHeading
-                eyebrow='Signature clubs'
-                title='Where passions get a timetable'
-                description='Clubs meet every week during the lunch and enrichment blocks — led by teachers who love the thing they teach.'
-            />
-
-            <ul className='mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
-                {clubs.map((club, index) => {
-                    const Icon = club.icon
-                    return (
-                        <Reveal key={club.title} delay={0.04 * index} className='h-full'>
-                            <li
-                                className='group flex h-full flex-col border border-line bg-surface p-7 shadow-[var(--shadow-soft)] transition-all duration-300 ease-spring hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(8,33,78,0.14)]'
-                                style={radius.card}
-                            >
-                                <span
-                                    className='grid size-11 place-items-center bg-blue-50 text-blue-700 transition-colors duration-300 group-hover:bg-blue-700 group-hover:text-white dark:bg-blue-500/15 dark:text-blue-300 dark:group-hover:bg-blue-600 dark:group-hover:text-white'
-                                    style={radius.icon}
-                                >
-                                    <Icon className='size-5' strokeWidth={1.75} />
-                                </span>
-                                <h3 className='font-heading mt-5 text-base font-bold tracking-tight text-ink md:text-lg'>
-                                    {club.title}
-                                </h3>
-                                <p className='mt-2 text-sm font-semibold leading-relaxed text-muted'>
-                                    {club.description}
-                                </p>
-                            </li>
-                        </Reveal>
-                    )
-                })}
-            </ul>
-        </div>
-    </section>
-)
-
-const HousesSection = () => (
-    <section className='featured-panel relative w-full overflow-hidden py-20 md:py-28'>
-        <div className='container relative z-10'>
-            <SectionHeading
-                dark
-                eyebrow='The house system'
-                title='Four houses, one friendly rivalry'
-                description='Every student joins a house on their first day. Points are earned in everything — sports, quizzes, reading, service — and the House Cup is presented at Speech Day.'
-            />
-
-            <ul className='mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6'>
-                {houses.map((house, index) => (
-                    <Reveal key={house.name} delay={0.06 * index} className='h-full'>
-                        <li
-                            className='group flex h-full flex-col overflow-hidden border border-white/15 bg-white/10 backdrop-blur-sm transition-all duration-300 ease-spring hover:-translate-y-1 hover:bg-white/15'
-                            style={radius.card}
-                        >
-                            <span aria-hidden='true' className={`h-1.5 w-full ${house.color}`} />
-                            <div className='flex flex-1 flex-col p-7'>
-                                <span
-                                    className={`grid size-12 place-items-center bg-white shadow-[var(--shadow-soft)] ${house.text}`}
-                                    style={radius.chip}
-                                >
-                                    <Shield className='size-6' strokeWidth={1.75} />
-                                </span>
-                                <h3 className='font-heading mt-5 text-lg font-bold tracking-tight text-white'>
-                                    {house.name}
-                                </h3>
-                                <p className='mt-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-yellow-300'>
-                                    {house.motto}
-                                </p>
-                                <p className='mt-3 flex-1 text-sm font-semibold leading-relaxed text-white/85'>
-                                    {house.description}
-                                </p>
-                            </div>
-                        </li>
-                    </Reveal>
-                ))}
-            </ul>
         </div>
     </section>
 )
@@ -510,39 +336,6 @@ const CalendarSection = () => (
     </section>
 )
 
-const JoinSection = () => (
-    <section className='relative w-full overflow-hidden bg-surface-2/60 py-20 md:py-24'>
-        <div className='container relative'>
-            <SectionHeading
-                eyebrow='Getting involved'
-                title='Joining is the easy part'
-                description='We keep sign-ups simple and commitments meaningful — every child in, no one lost in the crowd.'
-            />
-
-            <ol className='mt-14 grid gap-6 md:grid-cols-3'>
-                {joinSteps.map((item, index) => (
-                    <Reveal key={item.step} delay={0.08 * index} className='h-full'>
-                        <li
-                            className='relative flex h-full flex-col border border-line bg-surface p-8 shadow-[var(--shadow-soft)]'
-                            style={radius.card}
-                        >
-                            <span className='font-heading text-4xl font-black tracking-tight text-blue-100 dark:text-blue-900/80'>
-                                {item.step}
-                            </span>
-                            <h3 className='font-heading mt-4 text-lg font-bold tracking-tight text-ink'>
-                                {item.title}
-                            </h3>
-                            <p className='mt-2 text-sm font-semibold leading-relaxed text-muted'>
-                                {item.description}
-                            </p>
-                        </li>
-                    </Reveal>
-                ))}
-            </ol>
-        </div>
-    </section>
-)
-
 const ClosingCta = () => (
     <section className='brand-atmosphere relative w-full overflow-hidden py-20 md:py-24'>
         <div className='container relative z-10'>
@@ -586,13 +379,11 @@ const ActivitiesPage = () => {
             />
             <IntroSection />
             <PillarsSection />
-            <ClubsSection />
-            <HousesSection />
             <CalendarSection />
-            <JoinSection />
             <ClosingCta />
         </main>
     )
 }
 
 export default ActivitiesPage
+

@@ -142,7 +142,7 @@ const StorySection = () => (
                             Explore our programs
                         </Button>
                         <Button to='/contact' size='lg' variant='outline'>
-                            Plan a campus visit
+                            Plan a school visit
                         </Button>
                     </div>
                 </Reveal>

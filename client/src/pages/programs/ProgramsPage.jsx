@@ -104,7 +104,7 @@ const divisions = [
             'Optional subject offerings (STEM)',
             'Dedicated university and career counselling',
             'Leadership positions, national competitions, and internships',
-            'Evening prep and boarding options on every campus',
+            'Evening prep and boarding options on every branch',
         ],
         subjects: ['Core Maths', 'English', 'Integrated Sciences', 'Business Studies', 'Humanities', 'Electives by pathway'],
         classSize: 'Max 30 per class',

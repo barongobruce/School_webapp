@@ -1115,7 +1115,7 @@ async function seedVipAccounts(ctx, hashedPassword) {
             gender: 'female',
             photo: portrait('female', 18),
             dob: '2012-09-04',
-            phone: '+233551880002',
+            phone: '+254551880002',
             classCode: 'G8B',
         },
         {
@@ -1126,7 +1126,7 @@ async function seedVipAccounts(ctx, hashedPassword) {
             gender: 'male',
             photo: portrait('male', 19),
             dob: '2013-01-22',
-            phone: '+233551880003',
+            phone: '+254551880003',
             classCode: 'G7A',
         },
     ];

@@ -94,7 +94,7 @@ const Login = () => {
                   Barongo
                 </span>
                 <span className='block text-[10px] font-medium tracking-[0.06em] text-white/55 uppercase'>
-                  Achiever
+                  Academy
                 </span>
               </span>
             </Link>
@@ -106,7 +106,7 @@ const Login = () => {
                 transition={{ delay: 0.2, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 className='font-heading text-4xl font-bold tracking-tight text-white xl:text-5xl'
               >
-                Your campus portal starts here.
+                Your school portal starts here.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 14 }}
@@ -162,7 +162,7 @@ const Login = () => {
                   Barongo
                 </span>
                 <span className='block text-[10px] font-medium tracking-[0.06em] text-faint uppercase'>
-                  Achiever
+                  Academy
                 </span>
               </span>
             </div>
@@ -201,7 +201,7 @@ const Login = () => {
                   required
                   value={form.email}
                   onChange={handleChange}
-                  placeholder='you@adesuaacademy.edu'
+                  placeholder='you@barongoacademy.edu'
                   className={inputClass}
                   style={fieldRadius}
                 />
@@ -262,7 +262,7 @@ const Login = () => {
             </form>
 
             <p className='mt-8 text-center text-sm text-muted dark:text-gray-400'>
-              New to ADESUA?{' '}
+              New to BARONGO Academy?{' '}
               <Link
                 to='/contact'
                 className='font-semibold text-blue-700 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300'

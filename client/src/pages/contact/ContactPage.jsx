@@ -18,7 +18,7 @@ import {
 import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import { cn } from '../../lib/utils'
-import ContactHeaderImage from '../../assets/graduate4.jpg'
+import ContactHeaderImage from '../../assets/header5.jpg'
 
 /* ------------------------------------------------------------------ */
 /* Data                                                                */
@@ -29,32 +29,32 @@ const departments = [
         icon: GraduationCap,
         title: 'Admissions',
         description: 'Applications, entrance assessments, and enrolment for all three campuses.',
-        lines: ['admissions@adesuaacademy.edu', '(233) 123-456789'],
-        href: 'mailto:admissions@adesuaacademy.edu',
+        lines: ['admissions@barongoacademy.edu', '(254) 123-456789'],
+        href: 'mailto:admissions@barongoacademy.edu',
         action: 'Email admissions',
     },
     {
         icon: School,
         title: 'General Enquiries',
         description: 'School life, programs, activities, and anything else on your mind.',
-        lines: ['info@adesuaacademy.edu', '(233) 123-456789'],
-        href: 'mailto:info@adesuaacademy.edu',
+        lines: ['info@barongoacademy.edu', '(254) 123-456789'],
+        href: 'mailto:info@barongoacademy.edu',
         action: 'Email the office',
     },
     {
         icon: Banknote,
         title: 'Fees & Accounts',
         description: 'Fee schedules, payment plans, scholarships, and receipts.',
-        lines: ['accounts@adesuaacademy.edu', 'Mon – Fri, 8:00 – 15:00'],
-        href: 'mailto:accounts@adesuaacademy.edu',
+        lines: ['accounts@barongoacademy.edu', 'Mon – Fri, 8:00 – 15:00'],
+        href: 'mailto:accounts@barongoacademy.edu',
         action: 'Email accounts',
     },
     {
         icon: MessageCircle,
         title: 'WhatsApp Line',
         description: 'Quick questions answered on school days between 8:00 and 16:00.',
-        lines: ['(233) 123-456789', 'Replies within the school day'],
-        href: 'https://wa.me/233123456789',
+        lines: ['(254) 123-456789', 'Replies within the school day'],
+        href: 'https://wa.me/254123456789',
         action: 'Chat on WhatsApp',
     },
 ]
@@ -76,40 +76,43 @@ const subjects = [
 
 const campuses = [
     {
-        id: 'accra',
-        region: 'Greater Accra Campus',
-        cities: 'Tema & Accra',
-        address: '1 Education Drive, Community 6, Tema',
-        landmark: 'Off the Tema Motorway, near Community 6 Police Station',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
-        mapQuery: 'Tema, Greater Accra, Ghana',
+        id: 'kasarani',
+        region: 'Kasarani Campus',
+        cities: 'Kasarani, Nairobi',
+        address: 'Kasarani, Nairobi County, Kenya',
+        landmark: 'Nairobi County, Kenya',
+        phone: '(254) 123-456789',
+        tel: '+254123456789',
+        mapQuery: 'Kasarani, Nairobi, Kenya',
+        mapUrl: 'https://maps.app.goo.gl/6efdEq4WnBbZ4dj87',
     },
     {
-        id: 'volta',
-        region: 'Volta Campus',
-        cities: 'Keta',
-        address: 'Lagoon Road, Keta, Volta Region',
-        landmark: 'Five minutes from Keta Lagoon, beside the district library',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
-        mapQuery: 'Keta, Volta Region, Ghana',
+        id: 'Thika',
+        region: 'Thika Campus',
+        cities: 'Thika, Kiambu County',
+        address: 'Thika, Kiambu County, Kenya',
+        landmark: 'Kiambu County, Kenya',
+        phone: '(254) 123-456789',
+        tel: '+254123456789',
+        mapQuery: 'Thika, Kiambu County, Kenya',
+        mapUrl: 'https://maps.app.goo.gl/pW25N7PyzLSryXyt9',
     },
     {
-        id: 'eastern',
-        region: 'Eastern Campus',
-        cities: 'Koforidua',
-        address: 'Galloway Avenue, Koforidua, Eastern Region',
-        landmark: 'Near Jackson Park, on the road to the Koforidua Technical University',
-        phone: '(233) 123-456789',
-        tel: '+233123456789',
-        mapQuery: 'Koforidua, Eastern Region, Ghana',
+        id: 'Rongai',
+        region: 'Rongai Campus',
+        cities: 'Ongata Rongai, Kajiado County',
+        address: 'Ongata Rongai, Kajiado County, Kenya',
+        landmark: 'Kajiado County, Kenya',
+        phone: '(254) 123-456789',
+        tel: '+254123456789',
+        mapQuery: 'Ongata Rongai, Kajiado County, Kenya',
+        mapUrl: 'https://maps.app.goo.gl/cp9wayKkDiovHR347',
     },
 ]
 
 const faqs = [
     {
-        question: 'When can my child join ADESUA Academy?',
+        question: 'When can my child join Barongo Academy?',
         answer: 'Our main intake is September, but we accept applications all year round and admit mid-year when places are available. Start with the admissions team and they will walk you through assessment dates for your campus.',
     },
     {
@@ -356,7 +359,7 @@ const FormSection = () => {
                                             name='phone'
                                             value={formData.phone}
                                             onChange={handleChange}
-                                            placeholder='(233) 000-000000'
+                                            placeholder='(254) 000-000000'
                                             className={fieldClass}
                                             style={radius.field}
                                             autoComplete='tel'
@@ -456,18 +459,18 @@ const FormSection = () => {
                                     </p>
                                     <div className='mt-6 flex flex-col gap-2.5'>
                                         <a
-                                            href='tel:+233123456789'
+                                            href='tel:+254123456789'
                                             className='inline-flex items-center gap-2.5 text-sm font-bold text-white transition-colors hover:text-yellow-300'
                                         >
                                             <Phone className='size-4' strokeWidth={2} />
-                                            (233) 123-456789
+                                            (254) 123-456789
                                         </a>
                                         <a
-                                            href='mailto:admissions@adesuaacademy.edu'
+                                            href='mailto:admissions@barongoacademy.edu'
                                             className='inline-flex items-center gap-2.5 text-sm font-bold text-white transition-colors hover:text-yellow-300'
                                         >
                                             <Mail className='size-4' strokeWidth={2} />
-                                            admissions@adesuaacademy.edu
+                                            admissions@barongoacademy.edu
                                         </a>
                                     </div>
                                 </div>
@@ -553,7 +556,7 @@ const MapSection = () => {
                                         {activeCampus.phone}
                                     </a>
                                     <a
-                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeCampus.mapQuery)}`}
+                                        href={activeCampus.mapUrl}
                                         target='_blank'
                                         rel='noreferrer'
                                         className='flex items-center gap-2.5 text-sm font-bold text-white transition-colors hover:text-yellow-300'
@@ -651,7 +654,7 @@ const ClosingCta = () => (
                 dark
                 eyebrow='We are ready when you are'
                 title='The next step is a conversation'
-                description='Call, write, or walk in — every great ADESUA story starts with a family saying hello.'
+                description='Call, write, or walk in — every great BARONGO story starts with a family saying hello.'
             />
 
             <Reveal delay={0.12} className='mt-10 text-center'>

@@ -20,7 +20,7 @@ const testimonials = [
     quote:
       'My daughter came home excited about science for the first time. Barongo Academy did not just teach her — they lit something lasting.',
     name: 'Selina A.',
-    role: 'Parent · Thika Campus',
+    role: 'Parent · Thika branch',
     image: studentA,
   },
   {
@@ -36,7 +36,7 @@ const testimonials = [
     quote:
       'Choosing Barongo Academy was the best decision we made. The care, the standards, and the community feel like family.',
     name: 'Chillion B.',
-    role: 'Parent · Kasarani Campus',
+    role: 'Parent · Kasarani branch',
     image: studentC,
   },
   {
@@ -52,7 +52,7 @@ const testimonials = [
     quote:
       'Every morning feels purposeful. Staff greet students by name — that small thing builds confidence you carry all day.',
     name: 'Leah N.',
-    role: 'Teacher · Rongai Campus',
+    role: 'Teacher · Rongai branch',
     image: studentE,
   },
 ]

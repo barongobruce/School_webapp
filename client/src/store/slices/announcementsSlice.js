@@ -2,7 +2,7 @@ import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { getMyAnnouncements } from '../../lib/announcement.requests'
 import { clearUser } from './userSlice'
 
-const seenStorageKey = (userId) => `adesua:announcements:seen:${userId}`
+const seenStorageKey = (userId) => `barongo:announcements:seen:${userId}`
 
 const readSeenIds = (userId) => {
   if (!userId || typeof window === 'undefined') return []
