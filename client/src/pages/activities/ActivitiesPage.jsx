@@ -21,7 +21,7 @@ import ArtsImage from '../../assets/New folder/activity2.jpg'
 import ClubsImage from '../../assets/New folder/pexels-tima-miroshnichenko-9572726.jpg'
 import LeadershipImage from '../../assets/New folder/pexels-zen-chung-5537533.jpg'
 import DramaImage from '../../assets/New folder/DramaImage.jpg'
-import ChristianUnionImage from '../../assets/christian-union.jpg'
+import ChristianUnionImage from "../../assets/Christian-Union.jpg";
 
 
 /* ------------------------------------------------------------------ */
