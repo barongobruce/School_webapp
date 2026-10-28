@@ -1,14 +1,47 @@
+const nodemailer = require('nodemailer');
 const {
-    MAILTRAP_TOKEN,
+    MAILTRAP_HOST,
+    MAILTRAP_USERNAME,
     MAILTRAP_PASSWORD,
+    MAILTRAP_PORT,
 } = require('../config/env');
 
-const MAILTRAP_SEND_URL = 'https://send.api.mailtrap.io/api/send';
-const SEND_TIMEOUT_MS = 15000;
-
 class EmailSender {
-    getToken() {
-        return MAILTRAP_TOKEN || MAILTRAP_PASSWORD;
+    transporter = null;
+
+    getTransporter() {
+        const host = MAILTRAP_HOST?.trim();
+        const username = MAILTRAP_USERNAME?.trim();
+        const password = MAILTRAP_PASSWORD;
+        const port = Number(MAILTRAP_PORT || 2525);
+
+        if (!host || !username || !password) {
+            throw new Error(
+                'Mailtrap Sandbox SMTP is not configured (set MAILTRAP_HOST, MAILTRAP_PORT, MAILTRAP_USERNAME, and MAILTRAP_PASSWORD)'
+            );
+        }
+
+        if (!Number.isInteger(port) || port < 1 || port > 65535) {
+            throw new Error('MAILTRAP_PORT must be a valid port number');
+        }
+
+        if (!this.transporter) {
+            this.transporter = nodemailer.createTransport({
+                host,
+                port,
+                secure: port === 465,
+                requireTLS: port !== 465,
+                auth: {
+                    user: username,
+                    pass: password,
+                },
+                connectionTimeout: 15000,
+                greetingTimeout: 15000,
+                socketTimeout: 15000,
+            });
+        }
+
+        return this.transporter;
     }
 
     async sendEmail({ to, subject, html, text }) {
@@ -16,57 +49,24 @@ class EmailSender {
             throw new Error('to, subject, and html or text are required');
         }
 
-        const token = this.getToken();
-        if (!token) {
-            throw new Error(
-                'Mailtrap is not configured (set MAILTRAP_TOKEN or MAILTRAP_PASSWORD)'
-            );
-        }
+        const transporter = this.getTransporter();
+        const info = await transporter.sendMail({
+            from: {
+                name: 'School Web App',
+                address: 'noreply@example.com',
+            },
+            to,
+            subject,
+            ...(text && { text }),
+            ...(html && { html }),
+        });
 
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), SEND_TIMEOUT_MS);
-
-        try {
-            const response = await fetch(MAILTRAP_SEND_URL, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'User-Agent': 'school-webapp-api',
-                },
-                body: JSON.stringify({
-                    from: {
-                        email: 'noreply@dummyegator.com',
-                        name: 'School Web App',
-                    },
-                    to: [{ email: to }],
-                    subject,
-                    ...(text && { text }),
-                    ...(html && { html }),
-                }),
-                signal: controller.signal,
-            });
-
-            const body = await response.json().catch(() => ({}));
-
-            if (!response.ok) {
-                const detail =
-                    body?.errors?.join?.(', ') ||
-                    body?.message ||
-                    JSON.stringify(body) ||
-                    response.statusText;
-                throw new Error(`Mailtrap API ${response.status}: ${detail}`);
-            }
-
-            return body;
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                throw new Error(`Mailtrap API timed out after ${SEND_TIMEOUT_MS}ms`);
-            }
-            throw error;
-        } finally {
-            clearTimeout(timer);
-        }
+        return {
+            messageId: info.messageId,
+            accepted: info.accepted,
+            rejected: info.rejected,
+            response: info.response,
+        };
     }
 }
 

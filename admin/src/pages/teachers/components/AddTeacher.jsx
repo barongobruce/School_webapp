@@ -431,6 +431,7 @@ const AddTeacher = ({ onSuccess }) => {
   const [qualificationPreviews, setQualificationPreviews] = useState(['', '', ''])
   const [whatsappSource, setWhatsappSource] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [demoEnrollment, setDemoEnrollment] = useState(false)
   const [error, setError] = useState('')
   const [stepKey, setStepKey] = useState(0)
   const previewUrlsRef = useRef(new Set())
@@ -716,6 +717,7 @@ const AddTeacher = ({ onSuccess }) => {
     formData.append('firstName', form.firstName.trim())
     formData.append('lastName', form.lastName.trim())
     formData.append('email', form.email.trim())
+    formData.append('demoEnrollment', String(demoEnrollment))
     formData.append('isActive', String(form.isActive))
     formData.append('contactInfo', JSON.stringify(form.contactInfo))
     formData.append('address', JSON.stringify(form.address))
@@ -1077,6 +1079,18 @@ const AddTeacher = ({ onSuccess }) => {
             )}
           </div>
         </div>
+
+        {step === STEPS.length - 1 ? (
+          <label className='flex cursor-pointer items-start gap-2.5 rounded-xl border border-blue-200 bg-blue-50/70 px-3.5 py-3 text-[12px] text-gray-700 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-gray-200'>
+            <input type='checkbox' checked={demoEnrollment} onChange={(event) => setDemoEnrollment(event.target.checked)} className='mt-0.5 accent-blue-700' />
+            <span>
+              <span className='block font-semibold'>Create demo account without email</span>
+              <span className='mt-0.5 block text-[11px] text-gray-500 dark:text-gray-400'>
+                Uses the shared demo password configured on the API. No credential email will be sent.
+              </span>
+            </span>
+          </label>
+        ) : null}
 
         <div className='flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/8'>
           <Button

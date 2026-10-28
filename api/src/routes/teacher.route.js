@@ -29,6 +29,11 @@ const {
     saveLessonAttendance,
     getTeacherAttendanceLessons,
 } = require('../controllers/teacher/attendance.controller');
+const {
+    getTeacherTimetableForEditing,
+    saveTimetableDraft,
+    publishTimetable,
+} = require('../controllers/teacher/timetable.controller');
 const { protectTeacher } = require('../middleware/teacher.middleware');
 const {
     handleLessonUpload,
@@ -41,6 +46,9 @@ router.use(protectTeacher);
 
 router.get('/classes', getTeacherClasses);
 router.get('/classes/:id', getTeacherClassById);
+router.get('/timetables/:classId', getTeacherTimetableForEditing);
+router.put('/timetables/:classId', saveTimetableDraft);
+router.post('/timetables/:classId/publish', publishTimetable);
 router.get('/guardians', getTeacherGuardians);
 router.get('/guardians/:id', getTeacherGuardianById);
 

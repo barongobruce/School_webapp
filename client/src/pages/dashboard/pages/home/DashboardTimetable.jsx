@@ -163,26 +163,23 @@ const ViewToggle = ({ view, onChange }) => (
 )
 
 const LessonBlock = ({ lesson, top, height, showMeta = false }) => {
-  const id = lesson.id || lesson._id
   const start = new Date(lesson.scheduledAt)
   const duration = Math.max(Number(lesson.durationMinutes) || 45, 15)
   const end = new Date(start.getTime() + duration * 60_000)
   const tone = subjectTone(lessonLabel(lesson))
-  const meta = showMeta
-    ? [lesson.className, lesson.teacher].filter(Boolean).join(' · ')
-    : ''
-
-  return (
-    <Link
-      to={`/dashboard/lessons/${id}`}
-      title={`${lessonLabel(lesson)} · ${formatRange(start, end)}`}
-      className={`absolute inset-x-0.5 flex flex-col justify-center overflow-hidden px-1.5 py-0.5 transition-shadow hover:shadow-[var(--shadow-soft)] ${tone.bg}`}
-      style={{
-        top,
-        height: Math.max(height, 22),
-        borderRadius: '0.5rem 0.15rem 0.5rem 0.15rem',
-      }}
-    >
+  const meta = [
+    showMeta ? lesson.className : '',
+    lesson.teacher,
+    lesson.room,
+  ].filter(Boolean).join(' · ')
+  const className = `absolute inset-x-0.5 flex flex-col justify-center overflow-hidden px-1.5 py-0.5 transition-shadow ${tone.bg}`
+  const style = {
+    top,
+    height: Math.max(height, 22),
+    borderRadius: '0.5rem 0.15rem 0.5rem 0.15rem',
+  }
+  const content = (
+    <>
       <span className={`block truncate text-[11px] font-semibold leading-tight ${tone.text}`}>
         {lessonLabel(lesson)}
       </span>
@@ -191,6 +188,30 @@ const LessonBlock = ({ lesson, top, height, showMeta = false }) => {
           {meta}
         </span>
       ) : null}
+    </>
+  )
+
+  if (lesson.isTimetableSlot) {
+    return (
+      <div
+        title={`${lessonLabel(lesson)} · ${formatRange(start, end)}`}
+        className={className}
+        style={style}
+      >
+        {content}
+      </div>
+    )
+  }
+
+  const id = lesson.id || lesson._id
+  return (
+    <Link
+      to={`/dashboard/lessons/${id}`}
+      title={`${lessonLabel(lesson)} · ${formatRange(start, end)}`}
+      className={`${className} hover:shadow-[var(--shadow-soft)]`}
+      style={style}
+    >
+      {content}
     </Link>
   )
 }

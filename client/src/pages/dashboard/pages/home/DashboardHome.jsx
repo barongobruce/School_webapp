@@ -16,10 +16,9 @@ import { USER_ROLES } from '../../../../store/slices/uiSlice'
 import Button from '../../../../components/Button'
 import { STATUS_META } from '../attendance/attendanceUtils'
 import AttendanceDonut from '../attendance/components/AttendanceDonut'
-import DashboardTimetable from './DashboardTimetable'
 import GuardianHome from './GuardianHome'
 import TeacherHome from './TeacherHome'
-import demoLessons from '../../../../data/lessons'
+import PublishedTimetable from './PublishedTimetable'
 
 const cardRadius = { borderRadius: '1.6rem 0.45rem 1.6rem 0.45rem' }
 const softRadius = { borderRadius: '0.95rem 0.3rem 0.95rem 0.3rem' }
@@ -265,10 +264,7 @@ const StudentHome = ({ data }) => {
       </div>
 
       <div className='grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]'>
-        <DashboardTimetable
-          lessons={demoLessons}
-          title='Timetable'
-        />
+        <PublishedTimetable title='Timetable' />
 
         <SectionCard
           title='Attendance'

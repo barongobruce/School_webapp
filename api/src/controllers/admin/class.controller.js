@@ -244,6 +244,14 @@ const getClasses = async (req, res, next) => {
                     select: 'firstName lastName email photo isActive',
                 },
             })
+            .populate({
+                path: 'classTeacher',
+                select: 'user',
+                populate: {
+                    path: 'user',
+                    select: 'firstName lastName email photo isActive',
+                },
+            })
             .sort({ createdAt: -1 })
             .lean();
 
@@ -286,6 +294,14 @@ const getClassById = async (req, res, next) => {
             .populate('courses', 'courseName courseCode courseType courseStatus courseDescription')
             .populate({
                 path: 'teachers',
+                populate: {
+                    path: 'user',
+                    select: 'firstName lastName email photo isActive',
+                },
+            })
+            .populate({
+                path: 'classTeacher',
+                select: 'user',
                 populate: {
                     path: 'user',
                     select: 'firstName lastName email photo isActive',
@@ -368,6 +384,36 @@ const updateClass = async (req, res, next) => {
             });
         }
 
+        let nextClassTeacher = classItem.classTeacher || null;
+        if (req.body.classTeacher !== undefined) {
+            const classTeacherId = String(req.body.classTeacher || '').trim();
+            if (!classTeacherId) {
+                nextClassTeacher = null;
+            } else {
+                if (!mongoose.Types.ObjectId.isValid(classTeacherId)) {
+                    return res.status(400).json({ message: 'Invalid class teacher ID' });
+                }
+                const teacher = await TeacherModel.findById(classTeacherId)
+                    .select('_id classes')
+                    .lean();
+                if (!teacher) {
+                    return res.status(404).json({ message: 'Class teacher profile not found' });
+                }
+                const assignedOnClass = (classItem.teachers || []).some(
+                    (teacherId) => teacherId.toString() === classTeacherId,
+                );
+                const assignedOnTeacher = (teacher.classes || []).some(
+                    (classId) => classId.toString() === classItem._id.toString(),
+                );
+                if (!assignedOnClass && !assignedOnTeacher) {
+                    return res.status(400).json({
+                        message: 'The designated class teacher must already be assigned to this class',
+                    });
+                }
+                nextClassTeacher = teacher._id;
+            }
+        }
+
         const uploaded = await uploadFiles(req.files, 'classes');
         const urlsToDelete = [];
 
@@ -377,6 +423,7 @@ const updateClass = async (req, res, next) => {
         classItem.grade =
             grade !== undefined && grade !== '' ? Number(grade) : null;
         classItem.academicYear = academicYear?.trim() || '';
+        classItem.classTeacher = nextClassTeacher;
 
         if (isActive !== undefined) {
             classItem.isActive = isActive === true || isActive === 'true';
@@ -415,6 +462,14 @@ const updateClass = async (req, res, next) => {
             .populate('courses', 'courseName courseCode courseType courseStatus courseDescription')
             .populate({
                 path: 'teachers',
+                populate: {
+                    path: 'user',
+                    select: 'firstName lastName email photo isActive',
+                },
+            })
+            .populate({
+                path: 'classTeacher',
+                select: 'user',
                 populate: {
                     path: 'user',
                     select: 'firstName lastName email photo isActive',

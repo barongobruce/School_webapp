@@ -14,12 +14,14 @@ const {
     getMyAnnouncements,
     getMyAnnouncementById,
 } = require('../controllers/user/announcement.controller');
+const { getMyTimetables } = require('../controllers/user/timetable.controller');
 
 const router = Router();
 
 router.post('/login', loginUser);
 router.get('/me', protectUser, getMe);
 router.get('/dashboard', protectUser, getMyDashboard);
+router.get('/timetables', protectUser, getMyTimetables);
 router.patch('/change-password', protectUser, changePassword);
 router.get('/complaints', protectUser, getComplaints);
 router.get('/complaint/:id', protectUser, getComplaintById);

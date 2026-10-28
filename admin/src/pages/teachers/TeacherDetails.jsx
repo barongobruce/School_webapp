@@ -16,6 +16,7 @@ import Button from '../../components/Button'
 import EditTeacher from './components/EditTeacher'
 import TeacherDetailsSkeleton from './components/TeacherDetailsSkeleton'
 import RelatedComplaints from '../../components/RelatedComplaints'
+import AdminTeacherTimetable from './components/AdminTeacherTimetable'
 
 const formatDate = (date) => {
   if (!date) return '—'
@@ -603,6 +604,8 @@ const TeacherDetails = () => {
           <DetailRow label='Updated' value={formatDate(teacher.updatedAt)} />
         </SectionCard>
       </div>
+
+      <AdminTeacherTimetable teacherId={teacher._id || teacher.id} />
 
       <RelatedComplaints complaints={teacher.reports || []} personLabel='teacher' />
     </section>

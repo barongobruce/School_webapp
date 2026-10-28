@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const GuardianModel = require('../../models/guardian.model.js');
 const { UserModel } = require('../../models/user.model.js');
+const ENV = require('../../config/env.js');
 const {
     uploadFiles,
     deleteFromCloudinaryMany,
@@ -124,6 +125,14 @@ const addGuardian = async (req, res, next) => {
 
     try {
         const { firstName, lastName, email, isActive, idType } = req.body;
+        const demoEnrollment = isTrue(req.body.demoEnrollment);
+        if (demoEnrollment && !isTrue(ENV.DEMO_ACCOUNT_CREATION_ENABLED)) {
+            return res.status(403).json({ message: 'Demo account creation is disabled on this server' });
+        }
+        if (demoEnrollment && !ENV.DEMO_DEFAULT_PASSWORD) {
+            return res.status(503).json({ message: 'DEMO_DEFAULT_PASSWORD is not configured on the API' });
+        }
+
         const contactInfo = normalizeContactInfo(parseJson(req.body.contactInfo, {}));
         const socialMedia = normalizeSocialMedia(parseJson(req.body.socialMedia, {}));
         const address = normalizeAddress(parseJson(req.body.address, {}));
@@ -167,7 +176,7 @@ const addGuardian = async (req, res, next) => {
             return res.status(400).json({ message: idDocs.error });
         }
 
-        const plainPassword = generatePassword();
+        const plainPassword = demoEnrollment ? ENV.DEMO_DEFAULT_PASSWORD : generatePassword();
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
         const user = await UserModel.create({
@@ -193,27 +202,32 @@ const addGuardian = async (req, res, next) => {
 
         uploadedUrls.length = 0;
 
-        const mail = guardianCredentialsEmail({
-            firstName: user.firstName,
-            email: emailNormalized,
-            password: plainPassword,
-        });
-
-        try {
-            await mailer.sendEmail({
-                to: emailNormalized,
-                subject: mail.subject,
-                text: mail.text,
-                html: mail.html,
+        if (!demoEnrollment) {
+            const mail = guardianCredentialsEmail({
+                firstName: user.firstName,
+                email: emailNormalized,
+                password: plainPassword,
             });
-        } catch (mailError) {
-            console.error('Guardian credentials email failed:', mailError.message);
+
+            try {
+                await mailer.sendEmail({
+                    to: emailNormalized,
+                    subject: mail.subject,
+                    text: mail.text,
+                    html: mail.html,
+                });
+            } catch (mailError) {
+                console.error('Guardian credentials email failed:', mailError.message);
+            }
         }
 
         const guardianData = await GuardianModel.findById(guardian._id).populate(populateUser);
 
         res.status(201).json({
-            message: 'Guardian created successfully',
+            message: demoEnrollment
+                ? 'Guardian created in demo mode without sending a credential email'
+                : 'Guardian created successfully',
+            demoEnrollment,
             guardian: guardianData,
         });
     } catch (error) {

@@ -283,6 +283,7 @@ const classToForm = (classItem) => ({
   description: classItem.description ?? '',
   grade: classItem.grade?.toString() ?? '',
   academicYear: classItem.academicYear ?? '',
+  classTeacher: classItem.classTeacher?._id || classItem.classTeacher || '',
   courses:
     classItem.courses
       ?.map((course) =>
@@ -451,6 +452,7 @@ const EditClass = ({ classItem, onSuccess }) => {
     formData.append('description', form.description.trim())
     formData.append('academicYear', form.academicYear.trim())
     formData.append('isActive', String(form.isActive))
+    formData.append('classTeacher', form.classTeacher || '')
     formData.append('courses', JSON.stringify(form.courses))
 
     if (form.grade !== '') formData.append('grade', String(Number(form.grade)))
@@ -565,6 +567,39 @@ const EditClass = ({ classItem, onSuccess }) => {
                     placeholder='e.g. 2025/2026'
                   />
                 </Field>
+                <Field
+                  label='Official class teacher'
+                  id='edit-class-classTeacher'
+                  hint='Choose a teacher already assigned to this class, or choose None to clear the designation.'
+                  className='sm:col-span-2'
+                >
+                  <select
+                    id='edit-class-classTeacher'
+                    className='form-field w-full rounded-lg px-3 py-2 text-[13px] dark:text-gray-100'
+                    value={form.classTeacher}
+                    onChange={(event) =>
+                      setForm((previous) => ({
+                        ...previous,
+                        classTeacher: event.target.value,
+                      }))
+                    }
+                  >
+                    <option value=''>None</option>
+                    {(classItem.teachers || []).map((teacher) => (
+                      <option key={teacher._id} value={teacher._id}>
+                        {[
+                          teacher.user?.firstName,
+                          teacher.user?.lastName,
+                        ]
+                          .filter(Boolean)
+                          .join(' ') ||
+                          teacher.email ||
+                          teacher._id}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
                 <Field
                   label='Description'
                   id='edit-class-description'
@@ -685,3 +720,4 @@ const EditClass = ({ classItem, onSuccess }) => {
 }
 
 export default EditClass
+

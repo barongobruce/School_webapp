@@ -10,6 +10,7 @@ const {addAnnouncement, getAnnouncements, getAnnouncementById, updateAnnouncemen
 const {getGuardians, getGuardianById, addGuardian, updateGuardian, setGuardianStatus} = require('../controllers/admin/guardian.controller.js');
 const {getComplaints, getComplaintById} = require('../controllers/admin/complaint.controller.js');
 const {getAdminDashboard} = require('../controllers/admin/dashboard.controller.js');
+const {getAdminTimetables} = require('../controllers/admin/timetable.controller.js');
 const {createInvoice, getPayments, getPaymentById, updatePayment, cancelPayment, resendInvoice} = require('../controllers/admin/payment.controller.js');
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use(adminProtector);
 router.get('/me', getMe);
 router.patch('/me/password', changePassword);
 router.get('/dashboard', getAdminDashboard);
+router.get('/timetables', getAdminTimetables);
 router.patch('/me/photo', handleUserPhotoUpload, updateMyPhoto);
 
 // TEACHER ROUTES for admin
@@ -77,3 +79,4 @@ router.post('/payments/:id/resend', resendInvoice);
 router.post('/payments/:id/cancel', cancelPayment);
 
 module.exports = router;
+

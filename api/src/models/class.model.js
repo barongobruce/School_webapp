@@ -9,6 +9,7 @@ const classSchema = new Schema(
         academicYear: { type: String, trim: true, default: '', maxlength: [10, 'Academic year must be less than 10 characters'] },
         students: [{ type: Schema.Types.ObjectId, ref: 'Student' }],
         teachers: [{ type: Schema.Types.ObjectId, ref: 'Teacher' }],
+        classTeacher: { type: Schema.Types.ObjectId, ref: 'Teacher', default: null },
         coverImage: { type: String, default: '', maxlength: [200, 'Cover image must be less than 200 characters'] },
         courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
         isActive: { type: Boolean, default: true },
@@ -27,3 +28,4 @@ const classSchema = new Schema(
 
 const ClassModel = model('Class', classSchema);
 module.exports = ClassModel;
+

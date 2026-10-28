@@ -12,6 +12,7 @@ import { getClassById } from '../../lib/class.requests'
 import useModal from '../../hooks/useModal'
 import Button from '../../components/Button'
 import EditClass from './components/EditClass'
+import AdminTimetableViewer from './components/AdminTimetableViewer'
 import ClassDetailsSkeleton from './components/ClassDetailsSkeleton'
 
 const formatDate = (date) => {
@@ -444,8 +445,11 @@ const ClassDetails = () => {
           )}
         </SectionCard>
       </div>
+
+      <AdminTimetableViewer initialClassId={classId} />
     </section>
   )
 }
 
 export default ClassDetails
+

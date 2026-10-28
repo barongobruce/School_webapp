@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const TeacherModel = require('../../models/teacher.model.js');
 const ClassModel = require('../../models/class.model.js');
 const { UserModel } = require('../../models/user.model.js');
+const ENV = require('../../config/env.js');
 const { uploadFiles, deleteFromCloudinaryMany } = require('../../middleware/multer.middleware.js');
 const generatePassword = require('../../utils/generatePassword.js');
 const mailer = require('../../utils/Mailer.js');
@@ -126,6 +127,14 @@ const addTeacher = async (req, res, next) => {
     try {
         const { firstName, lastName, email, isActive, identificationType, gender, dateOfBirth } =
             req.body;
+        const demoEnrollment = isTrue(req.body.demoEnrollment);
+
+        if (demoEnrollment && !isTrue(ENV.DEMO_ACCOUNT_CREATION_ENABLED)) {
+            return res.status(403).json({ message: 'Demo account creation is disabled on this server' });
+        }
+        if (demoEnrollment && !ENV.DEMO_DEFAULT_PASSWORD) {
+            return res.status(503).json({ message: 'DEMO_DEFAULT_PASSWORD is not configured on the API' });
+        }
 
         const contactInfo = normalizeContactInfo(parseJson(req.body.contactInfo, {}));
         const address = normalizeAddress(parseJson(req.body.address, {}));
@@ -205,7 +214,7 @@ const addTeacher = async (req, res, next) => {
             return res.status(400).json({ message: 'ID back document is required' });
         }
 
-        const password = generatePassword();
+        const password = demoEnrollment ? ENV.DEMO_DEFAULT_PASSWORD : generatePassword();
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await UserModel.create({
@@ -240,27 +249,32 @@ const addTeacher = async (req, res, next) => {
 
         uploadedUrls.length = 0;
 
-        const mail = teacherCredentialsEmail({
-            firstName: user.firstName,
-            email: emailNormalized,
-            password,
-        });
-
-        try {
-            await mailer.sendEmail({
-                to: emailNormalized,
-                subject: mail.subject,
-                text: mail.text,
-                html: mail.html,
+        if (!demoEnrollment) {
+            const mail = teacherCredentialsEmail({
+                firstName: user.firstName,
+                email: emailNormalized,
+                password,
             });
-        } catch (mailError) {
-            console.error('Teacher credentials email failed:', mailError.message);
+
+            try {
+                await mailer.sendEmail({
+                    to: emailNormalized,
+                    subject: mail.subject,
+                    text: mail.text,
+                    html: mail.html,
+                });
+            } catch (mailError) {
+                console.error('Teacher credentials email failed:', mailError.message);
+            }
         }
 
         const teacherData = await TeacherModel.findById(teacher._id).populate(teacherPopulate);
 
         res.status(201).json({
-            message: 'Teacher created successfully',
+            message: demoEnrollment
+                ? 'Teacher created in demo mode without sending a credential email'
+                : 'Teacher created successfully',
+            demoEnrollment,
             teacher: teacherData,
         });
     } catch (error) {
@@ -377,6 +391,23 @@ const updateTeacher = async (req, res, next) => {
         } catch (classError) {
             return res.status(classError.statusCode || 400).json({
                 message: classError.message,
+            });
+        }
+
+        const designatedClasses = await ClassModel.find({ classTeacher: teacher._id })
+            .select('_id className')
+            .lean();
+        const nextClassIds = new Set(classIds.map(String));
+        const removedDesignated = designatedClasses.filter(
+            (classItem) => !nextClassIds.has(String(classItem._id)),
+        );
+        const deactivating = isActive !== undefined && !isTrue(isActive);
+        if (removedDesignated.length || (deactivating && designatedClasses.length)) {
+            const affected = deactivating ? designatedClasses : removedDesignated;
+            return res.status(409).json({
+                message:
+                    'Reassign or clear the class-teacher designation before removing or deactivating this teacher for: ' +
+                    affected.map((item) => item.className).join(', '),
             });
         }
 
@@ -564,6 +595,19 @@ const setTeacherStatus = async (req, res, next) => {
         const user = await UserModel.findById(teacher.user);
         if (!user || user.isDeleted) {
             return res.status(404).json({ message: 'Teacher not found' });
+        }
+
+        if (!isTrue(isActive)) {
+            const designatedClasses = await ClassModel.find({ classTeacher: teacher._id })
+                .select('className')
+                .lean();
+            if (designatedClasses.length) {
+                return res.status(409).json({
+                    message:
+                        'Reassign or clear the class-teacher designation before deactivating this teacher: ' +
+                        designatedClasses.map((item) => item.className).join(', '),
+                });
+            }
         }
 
         user.isActive = isTrue(isActive);

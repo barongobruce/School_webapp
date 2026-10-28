@@ -5,6 +5,7 @@ const StudentModel = require('../../models/student.model.js');
 const GuardianModel = require('../../models/guardian.model.js');
 const ClassModel = require('../../models/class.model.js');
 const { UserModel } = require('../../models/user.model.js');
+const ENV = require('../../config/env.js');
 const { uploadFiles, deleteFromCloudinaryMany } = require('../../middleware/multer.middleware.js');
 const generatePassword = require('../../utils/generatePassword.js');
 const mailer = require('../../utils/Mailer.js');
@@ -199,6 +200,14 @@ const addStudent = async (req, res, next) => {
     let classId = null;
 
     try {
+        const demoEnrollment = isTrue(req.body.demoEnrollment);
+        if (demoEnrollment && !isTrue(ENV.DEMO_ACCOUNT_CREATION_ENABLED)) {
+            return res.status(403).json({ message: 'Demo account creation is disabled on this server' });
+        }
+        if (demoEnrollment && !ENV.DEMO_DEFAULT_PASSWORD) {
+            return res.status(503).json({ message: 'DEMO_DEFAULT_PASSWORD is not configured on the API' });
+        }
+
         const {
             firstName,
             lastName,
@@ -349,7 +358,7 @@ const addStudent = async (req, res, next) => {
         const linkingExistingGuardian = Boolean(existingGuardianUser);
         const guardianHasPassword = Boolean(existingGuardianUser?.password);
         // if the guardian user does not have a password,then it means this student is his first student so we should email the guardian with his credentials after creating the student and his(guardian) account
-        const shouldEmailGuardian = !existingGuardianUser || !guardianHasPassword;
+        const shouldEmailGuardian = !demoEnrollment && (!existingGuardianUser || !guardianHasPassword);
 
         const uploaded = await uploadFiles(req.files, 'students');
         uploadedUrls.push(...Object.values(uploaded).filter(Boolean));
@@ -396,7 +405,7 @@ const addStudent = async (req, res, next) => {
             });
         }
 
-        const studentPassword = generatePassword();
+        const studentPassword = demoEnrollment ? ENV.DEMO_DEFAULT_PASSWORD : generatePassword();
         const studentName = `${firstName.trim()} ${lastName.trim()}`;
         let guardianPassword = null;
         let pendingGuardianPasswordHash = null;
@@ -406,7 +415,7 @@ const addStudent = async (req, res, next) => {
         if (existingGuardianUser) {
             guardianUser = existingGuardianUser;
 
-            if (!guardianHasPassword) {
+            if (!guardianHasPassword && !demoEnrollment) {
                 guardianPassword = generatePassword();
                 pendingGuardianPasswordHash = await bcrypt.hash(guardianPassword, 10);
             }
@@ -425,7 +434,9 @@ const addStudent = async (req, res, next) => {
                 }
             }
         } else {
-            guardianPassword = generatePassword();
+            guardianPassword = demoEnrollment
+                ? ENV.DEMO_DEFAULT_PASSWORD
+                : generatePassword();
             const hashedGuardianPassword = await bcrypt.hash(guardianPassword, 10);
 
             guardianUser = await UserModel.create({
@@ -490,58 +501,60 @@ const addStudent = async (req, res, next) => {
 
         uploadedUrls.length = 0;
 
-        const studentMail = studentCredentialsEmail({
-            firstName: studentUser.firstName,
-            email: studentEmail,
-            password: studentPassword,
-        });
-
-        const emailJobs = [
-            mailer.sendEmail({
-                to: studentEmail,
-                subject: studentMail.subject,
-                text: studentMail.text,
-                html: studentMail.html,
-            }),
-        ];
-
-        if (shouldEmailGuardian) {
-            const guardianMail = guardianCredentialsEmail({
-                firstName: guardianUser.firstName,
-                email: guardianEmail,
-                password: guardianPassword,
-                studentName,
+        if (!demoEnrollment) {
+            const studentMail = studentCredentialsEmail({
+                firstName: studentUser.firstName,
+                email: studentEmail,
+                password: studentPassword,
             });
-            emailJobs.push(
+
+            const emailJobs = [
                 mailer.sendEmail({
-                    to: guardianEmail,
-                    subject: guardianMail.subject,
-                    text: guardianMail.text,
-                    html: guardianMail.html,
-                })
-            );
-        }
+                    to: studentEmail,
+                    subject: studentMail.subject,
+                    text: studentMail.text,
+                    html: studentMail.html,
+                }),
+            ];
 
-        try {
-            await Promise.all(emailJobs);
-        } catch (emailError) {
-            console.error('Credential email failed after account creation:', emailError.message);
-            await rollbackStudentCreation({
-                studentId: createdStudentId,
-                guardianId: linkedGuardianId,
-                createdGuardianId,
-                createdUserIds,
-                classId,
-            });
-            createdStudentId = null;
-            createdGuardianId = null;
-            createdUserIds.length = 0;
-            return res.status(502).json({
-                message:
-                    'Could not send credential emails. Student was not created. Please try again.',
-                emailSent: false,
-                detail: emailError.message,
-            });
+            if (shouldEmailGuardian) {
+                const guardianMail = guardianCredentialsEmail({
+                    firstName: guardianUser.firstName,
+                    email: guardianEmail,
+                    password: guardianPassword,
+                    studentName,
+                });
+                emailJobs.push(
+                    mailer.sendEmail({
+                        to: guardianEmail,
+                        subject: guardianMail.subject,
+                        text: guardianMail.text,
+                        html: guardianMail.html,
+                    })
+                );
+            }
+
+            try {
+                await Promise.all(emailJobs);
+            } catch (emailError) {
+                console.error('Credential email failed after account creation:', emailError.message);
+                await rollbackStudentCreation({
+                    studentId: createdStudentId,
+                    guardianId: linkedGuardianId,
+                    createdGuardianId,
+                    createdUserIds,
+                    classId,
+                });
+                createdStudentId = null;
+                createdGuardianId = null;
+                createdUserIds.length = 0;
+                return res.status(502).json({
+                    message:
+                        'Could not send credential emails. Student was not created. Please try again.',
+                    emailSent: false,
+                    detail: emailError.message,
+                });
+            }
         }
 
         if (pendingGuardianPasswordHash) {
@@ -555,12 +568,15 @@ const addStudent = async (req, res, next) => {
             .lean();
 
         res.status(201).json({
-            message: existingGuardianUser
-                ? 'Student created and linked to existing guardian successfully'
-                : 'Student and guardian created successfully',
+            message: demoEnrollment
+                ? 'Student and login accounts created in demo mode without sending credential emails'
+                : existingGuardianUser
+                  ? 'Student created and linked to existing guardian successfully'
+                  : 'Student and guardian created successfully',
             student: studentData,
-            emailSent: true,
-            guardianEmailSent: shouldEmailGuardian,
+            demoEnrollment,
+            emailSent: !demoEnrollment,
+            guardianEmailSent: !demoEnrollment && shouldEmailGuardian,
         });
     } catch (error) {
         await rollbackStudentCreation({
