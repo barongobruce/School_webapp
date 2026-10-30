@@ -10,6 +10,7 @@ import {
   BarChart3,
   DollarSign,
   Megaphone,
+  BrainCircuit,
 } from 'lucide-react'
 import { USER_ROLES } from '../../store/slices/uiSlice'
 
@@ -25,6 +26,13 @@ export const GUARDIAN_ROLES = [USER_ROLES.GUARDIAN, USER_ROLES.PARENT]
  */
 export const sidebarMenu = [
   { id: 1, path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  {
+    id: 15,
+    path: '/dashboard/ai-tutor',
+    icon: BrainCircuit,
+    label: 'AI Tutor',
+    roles: [USER_ROLES.STUDENT, USER_ROLES.TEACHER],
+  },
   {
     id: 2,
     path: '/dashboard/students',

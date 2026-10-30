@@ -8,3 +8,8 @@ build/
 
 *.log
 npm-debug.log*
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/

@@ -25,6 +25,14 @@ export const TeacherOnly = ({ children }) => (
   <RequireRole allowedRoles={TEACHER_ROLES}>{children}</RequireRole>
 )
 
+export const StudentOnly = ({ children }) => (
+  <RequireRole allowedRoles={['student']}>{children}</RequireRole>
+)
+
+export const StudentOrTeacherOnly = ({ children }) => (
+  <RequireRole allowedRoles={['student', 'teacher']}>{children}</RequireRole>
+)
+
 export const GuardianOnly = ({ children }) => (
   <RequireRole allowedRoles={GUARDIAN_ROLES}>{children}</RequireRole>
 )

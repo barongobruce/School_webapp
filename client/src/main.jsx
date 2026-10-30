@@ -41,11 +41,13 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import GuestRoute from './components/GuestRoute.jsx'
 import {
   GuardianOnly,
+  StudentOrTeacherOnly,
   TeacherOnly,
 } from './pages/dashboard/components/RequireRole.jsx'
 import Payments from './pages/dashboard/pages/payments/Payments.jsx'
 import PaymentSuccess from './pages/dashboard/pages/payments/PaymentSuccess.jsx'
 import PaymentFailed from './pages/dashboard/pages/payments/PaymentFailed.jsx'
+import AiTutor from './pages/dashboard/pages/aiTutor/AiTutor.jsx'
 
 const router = createBrowserRouter([
   {
@@ -87,6 +89,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <DashboardHome />,
+      },
+      {
+        path: '/dashboard/ai-tutor',
+        element: (
+          <StudentOrTeacherOnly>
+            <AiTutor />
+          </StudentOrTeacherOnly>
+        ),
       },
       {
         path: '/dashboard/students',

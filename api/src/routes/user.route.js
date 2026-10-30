@@ -15,11 +15,29 @@ const {
     getMyAnnouncementById,
 } = require('../controllers/user/announcement.controller');
 const { getMyTimetables } = require('../controllers/user/timetable.controller');
+const {
+    chatWithAiTutor,
+    getAiTutorHistory,
+    generateAiLearningTool,
+    getAiTutorPreferences,
+    updateAiTutorPreferences,
+    getAiTutorActivityHistory,
+    getAiTutorActivity,
+    submitAiTutorQuizScore,
+} = require('../controllers/user/aiTutor.controller');
 
 const router = Router();
 
 router.post('/login', loginUser);
 router.get('/me', protectUser, getMe);
+router.get('/ai/chat', protectUser, getAiTutorHistory);
+router.post('/ai/chat', protectUser, chatWithAiTutor);
+router.get('/ai/preferences', protectUser, getAiTutorPreferences);
+router.patch('/ai/preferences', protectUser, updateAiTutorPreferences);
+router.get('/ai/tools/:kind', protectUser, getAiTutorActivityHistory);
+router.post('/ai/tools/:kind', protectUser, generateAiLearningTool);
+router.get('/ai/activities/:id', protectUser, getAiTutorActivity);
+router.post('/ai/activities/:id/score', protectUser, submitAiTutorQuizScore);
 router.get('/dashboard', protectUser, getMyDashboard);
 router.get('/timetables', protectUser, getMyTimetables);
 router.patch('/change-password', protectUser, changePassword);

@@ -1,5 +1,23 @@
 const { Schema, model } = require('mongoose');
 
+const aiTutorPreferencesSchema = new Schema(
+    {
+        language: {
+            type: String,
+            enum: ['English', 'Kiswahili', 'Sheng'],
+            default: 'English',
+        },
+        learningStyle: {
+            type: String,
+            enum: ['Visual', 'Practical', 'Reading/Writing', 'Interactive', 'Story-based'],
+            default: 'Interactive',
+        },
+        favoriteSubject: { type: String, trim: true, maxlength: 80, default: '' },
+        weakSubject: { type: String, trim: true, maxlength: 80, default: '' },
+    },
+    { _id: false },
+);
+
 const userSchema = new Schema(
     {
         firstName: {
@@ -47,6 +65,10 @@ const userSchema = new Schema(
             required: true,
             enum: ['student', 'teacher', 'guardian'],
             default: 'student',
+        },
+        aiTutorPreferences: {
+            type: aiTutorPreferencesSchema,
+            default: () => ({}),
         },
         gender: { type: String, enum: ['male', 'female', 'other'] },
         dateOfBirth: { type: Date },
