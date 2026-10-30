@@ -30,12 +30,7 @@ const typeClass = (type) => {
 
 const getCourseId = (course) => course._id || course.id
 
-const getClassName = (course) => {
-  if (typeof course.courseClass === 'object' && course.courseClass) {
-    return course.courseClass.className || ''
-  }
-  return course.className || ''
-}
+const getClassName = () => 'All classes'
 
 const getTeacherLabel = (course) => {
   const teachers = course.courseTeachers || course.teachers || []
@@ -91,6 +86,9 @@ const CourseItem = ({ course, view = 'grid' }) => {
   const studentsCount = getCount(
     course.studentsCount ?? course.courseStudents,
   )
+  const studentAccessLabel = course.courseType === 'Core'
+    ? 'All class students'
+    : `${studentsCount} enrolled`
   const materialsCount = getCount(
     course.materialsCount ?? course.courseMaterials,
   )

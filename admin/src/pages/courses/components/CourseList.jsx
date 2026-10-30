@@ -7,12 +7,7 @@ import CoursesSkeleton from './CoursesSkeleton'
 const viewToggleBtn =
   'grid size-8 place-items-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'
 
-const getClassName = (course) => {
-  if (typeof course.courseClass === 'object' && course.courseClass) {
-    return course.courseClass.className || ''
-  }
-  return course.className || ''
-}
+const getClassName = () => 'All classes'
 
 const getTeacherNames = (course) => {
   const teachers = course.courseTeachers || course.teachers || []

@@ -10,7 +10,8 @@ import {
   UserRound,
   Users,
 } from 'lucide-react'
-import { getCourseById } from '../../lib/course.requests'
+import { getCourseById, updateCourseStudents } from '../../lib/course.requests'
+import { getStudents } from '../../lib/student.requests'
 import useModal from '../../hooks/useModal'
 import Button from '../../components/Button'
 import EditCourse from './components/EditCourse'
@@ -134,6 +135,82 @@ const PersonLink = ({ to, name, subtitle, icon: Icon = UserRound }) => (
   </Link>
 )
 
+const CourseStudentEnrollment = ({ course, onSaved }) => {
+  const [students, setStudents] = useState([])
+  const [selectedIds, setSelectedIds] = useState(() =>
+    (course.courseStudents || []).map((student) => String(student._id || student)),
+  )
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    if (course.courseType === 'Core') {
+      setLoading(false)
+      return undefined
+    }
+    let cancelled = false
+    getStudents({ isActive: true })
+      .then((data) => { if (!cancelled) setStudents(data.students || []) })
+      .catch((err) => { if (!cancelled) setError(err.message || 'Could not load students.') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [course.courseType])
+
+  const save = async () => {
+    setSaving(true)
+    setError('')
+    setSaved(false)
+    try {
+      const data = await updateCourseStudents(course._id, selectedIds)
+      const nextStudents = data.course?.courseStudents || []
+      setSelectedIds(nextStudents.map((student) => String(student._id || student)))
+      onSaved?.(nextStudents)
+      setSaved(true)
+    } catch (err) {
+      setError(err.message || 'Could not save course enrolment.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (course.courseType === 'Core') {
+    return <p className='text-[12px] text-gray-500 dark:text-gray-400'>Core subjects automatically include every student in their class.</p>
+  }
+
+  return (
+    <div className='space-y-3'>
+      <p className='text-[12px] text-gray-500 dark:text-gray-400'>
+        Select the students who take this subject. Elective and Optional course enrolment controls which lessons appear in each student’s timetable.
+      </p>
+      {error ? <p role='alert' className='text-[12px] text-rose-600 dark:text-rose-300'>{error}</p> : null}
+      {saved ? <p role='status' className='text-[12px] text-emerald-700 dark:text-emerald-300'>Enrolment saved.</p> : null}
+      {loading ? <p className='text-[13px] text-gray-500'>Loading students…</p> : (
+        <div className='max-h-72 space-y-1 overflow-y-auto pr-1'>
+          {students.map((student) => {
+            const id = String(student._id || student.id)
+            const checked = selectedIds.includes(id)
+            const name = [student.firstName, student.lastName].filter(Boolean).join(' ') || student.email || 'Student'
+            const className = student.class?.className || 'No class'
+            return (
+              <label key={id} className='flex cursor-pointer items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/70 px-3 py-2 text-[12px] dark:border-white/8 dark:bg-white/3'>
+                <input type='checkbox' checked={checked} onChange={(event) => setSelectedIds((current) => event.target.checked ? [...new Set([...current, id])] : current.filter((item) => item !== id))} />
+                <span className='min-w-0 flex-1 truncate font-medium text-gray-800 dark:text-gray-100'>{name}</span>
+                <span className='text-gray-400'>{className}</span>
+              </label>
+            )
+          })}
+          {!students.length ? <p className='text-[13px] text-gray-500'>No active students found.</p> : null}
+        </div>
+      )}
+      <button type='button' disabled={saving || loading} onClick={save} className='rounded-lg bg-blue-700 px-3 py-2 text-[12px] font-semibold text-white disabled:opacity-50'>
+        {saving ? 'Saving…' : 'Save student enrolment'}
+      </button>
+    </div>
+  )
+}
+
 const CourseDetails = () => {
   const { id } = useParams()
   const { open } = useModal()
@@ -221,12 +298,7 @@ const CourseDetails = () => {
 
   const teachers = course.courseTeachers || []
   const students = course.courseStudents || []
-  const classItem =
-    typeof course.courseClass === 'object' && course.courseClass
-      ? course.courseClass
-      : null
-  const className = classItem?.className || 'Unassigned'
-  const classId = classItem?._id || null
+  const className = 'All classes'
   const courseId = course._id || course.id
   const materialsCount = getCount(course.courseMaterials)
   const assignmentsCount = getCount(course.courseAssignments)
@@ -328,8 +400,7 @@ const CourseDetails = () => {
               </span>
               <span className='inline-flex items-center gap-1.5 rounded-[0.85rem_0.25rem] px-2 py-1.5 text-[13px] text-gray-600 dark:text-gray-300'>
                 <Users className='size-3.5 shrink-0' strokeWidth={1.75} />
-                {students.length}{' '}
-                {students.length === 1 ? 'student' : 'students'}
+                {course.courseType === 'Core' ? 'All class students' : `${students.length} ${students.length === 1 ? 'student' : 'students'}`}
               </span>
               <span
                 className='hidden text-gray-200 sm:inline dark:text-gray-700'
@@ -348,7 +419,7 @@ const CourseDetails = () => {
       </div>
 
       <div className='mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4'>
-        <StatCard label='Students' value={students.length} />
+        <StatCard label='Student access' value={course.courseType === 'Core' ? 'All in class' : students.length} />
         <StatCard label='Materials' value={materialsCount} />
         <StatCard label='Assignments' value={assignmentsCount} />
         <StatCard label='Assessments' value={quizzesCount + examsCount} />
@@ -366,29 +437,10 @@ const CourseDetails = () => {
           </dl>
         </SectionCard>
 
-        <SectionCard title='Class'>
+        <SectionCard title='Class availability'>
           <dl className='flex flex-col gap-3'>
-            <DetailRow
-              label='Assigned class'
-              value={
-                classId ? (
-                  <Link
-                    to={`/classes/${classId}`}
-                    className='inline-flex items-center gap-1.5 text-[#20509b] transition-colors hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200'
-                  >
-                    <GraduationCap className='size-3.5' strokeWidth={1.75} />
-                    {className}
-                  </Link>
-                ) : (
-                  className
-                )
-              }
-            />
-            <DetailRow label='Class code' value={classItem?.classCode} />
-            <DetailRow
-              label='Enrolled students'
-              value={students.length.toString()}
-            />
+            <DetailRow label='Available to' value='All classes' />
+            <DetailRow label='Enrolled students' value={course.courseType === 'Core' ? 'All students in each class' : students.length.toString()} />
           </dl>
         </SectionCard>
 
@@ -454,24 +506,12 @@ const CourseDetails = () => {
           )}
         </SectionCard>
 
-        <SectionCard title='Students'>
-          {students.length === 0 ? (
-            <p className='text-[13px] text-gray-500 dark:text-gray-400'>
-              No students linked to this course yet.
-            </p>
-          ) : (
-            <ul className='flex flex-col gap-2'>
-              {students.map((student) => (
-                <li key={student._id}>
-                  <PersonLink
-                    to={`/students/${student._id}`}
-                    name={`${student.firstName} ${student.lastName}`}
-                    subtitle={student.email}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
+        <SectionCard title={course.courseType === 'Core' ? 'Students' : 'Student enrolment'}>
+          <CourseStudentEnrollment
+            key={courseId}
+            course={course}
+            onSaved={(nextStudents) => setCourse((current) => ({ ...current, courseStudents: nextStudents }))}
+          />
         </SectionCard>
       </div>
     </section>

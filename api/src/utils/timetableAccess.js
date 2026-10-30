@@ -200,23 +200,13 @@ const validateEntries = async ({
         throw makeError('Publish at least one lesson before publishing');
     }
 
-    for (let i = 0; i < cleaned.length; i += 1) {
-        for (let j = i + 1; j < cleaned.length; j += 1) {
-            if (cleaned[i].dayOfWeek === cleaned[j].dayOfWeek && overlaps(cleaned[i], cleaned[j])) {
-                throw makeError(
-                    `Class timetable entries overlap on ${cleaned[i].dayOfWeek}: ${cleaned[i].startTime}–${cleaned[i].endTime} and ${cleaned[j].startTime}–${cleaned[j].endTime}`,
-                );
-            }
-        }
-    }
-
     const lessons = cleaned.filter((entry) => entry.slotType === 'lesson');
     const courseIds = [...new Set(lessons.map((entry) => entry.courseId))];
     const teacherIds = [...new Set(lessons.map((entry) => entry.teacherId))];
     let courseQuery = CourseModel.find({ _id: { $in: courseIds } })
-        .select('_id courseName courseClass courseTeachers courseStatus');
+        .select('_id courseName courseTeachers courseStatus courseType courseStudents');
     let teacherQuery = TeacherModel.find({ _id: { $in: teacherIds } })
-        .select('_id classes user')
+        .select('_id user')
         .populate({ path: 'user', select: 'isActive isDeleted' });
     if (session) {
         courseQuery = courseQuery.session(session);
@@ -228,20 +218,24 @@ const validateEntries = async ({
     ]);
     const courseById = new Map(courses.map((item) => [idOf(item), item]));
     const teacherById = new Map(teachers.map((item) => [idOf(item), item]));
-    const classCourseIds = (classItem.courses || []).map(idOf);
+    const classStudentIds = (classItem.students || []).map(idOf);
+    const audienceByEntry = new Map();
 
     for (const entry of lessons) {
         const course = courseById.get(entry.courseId);
         if (!course || course.courseStatus === 'Inactive') {
             throw makeError('A selected course was not found or is inactive');
         }
-        // Both relationships are present in the source model/workflow; either
-        // side can validly establish class membership.
-        if (
-            idOf(course.courseClass) !== idOf(classItem) &&
-            !classCourseIds.includes(entry.courseId)
-        ) {
-            throw makeError('A selected course is not assigned to this class');
+        if (String(course.courseType || 'Core') === 'Core') {
+            // null represents the whole class roster.
+            audienceByEntry.set(entry, null);
+        } else {
+            const enrolledIds = new Set((course.courseStudents || []).map(idOf));
+            const audience = classStudentIds.filter((studentId) => enrolledIds.has(studentId));
+            if (!audience.length) {
+                throw makeError(`No students in this class are enrolled in ${course.courseName}. Enroll students in the course before scheduling it.`);
+            }
+            audienceByEntry.set(entry, new Set(audience));
         }
 
         const teacher = teacherById.get(entry.teacherId);
@@ -249,11 +243,33 @@ const validateEntries = async ({
             throw makeError('A selected teacher account was not found or is inactive');
         }
         const teacherOnCourse = hasId(course.courseTeachers, entry.teacherId);
-        const teacherOnClass =
-            hasId(classItem.teachers, entry.teacherId) ||
-            hasId(teacher.classes, idOf(classItem));
-        if (!teacherOnCourse || !teacherOnClass) {
-            throw makeError('Each lesson teacher must be assigned to the course and the class');
+        if (!teacherOnCourse) {
+            throw makeError('Each lesson teacher must be assigned to the course');
+        }
+    }
+
+    // Two different subjects may run in parallel only when their enrolled
+    // student groups are disjoint. Breaks and lunches apply to the whole class.
+    for (let i = 0; i < cleaned.length; i += 1) {
+        for (let j = i + 1; j < cleaned.length; j += 1) {
+            const first = cleaned[i];
+            const second = cleaned[j];
+            if (first.dayOfWeek !== second.dayOfWeek || !overlaps(first, second)) continue;
+            let mayRunInParallel = first.slotType === 'lesson' && second.slotType === 'lesson';
+            if (mayRunInParallel) {
+                const firstAudience = audienceByEntry.get(first);
+                const secondAudience = audienceByEntry.get(second);
+                const sameTeacher = first.teacherId === second.teacherId;
+                const overlapStudents = firstAudience === null || secondAudience === null
+                    ? true
+                    : [...firstAudience].some((studentId) => secondAudience.has(studentId));
+                mayRunInParallel = !sameTeacher && !overlapStudents;
+            }
+            if (!mayRunInParallel) {
+                throw makeError(
+                    `Class timetable entries overlap on ${first.dayOfWeek}: ${first.startTime}–${first.endTime} and ${second.startTime}–${second.endTime}`,
+                );
+            }
         }
     }
 
@@ -281,6 +297,61 @@ const validateEntries = async ({
     return { entries: normalizedEntries, conflicts };
 };
 
+const getTeacherWorkloadSummary = async ({
+    classId,
+    academicYear,
+    term,
+    entries = [],
+    session = null,
+}) => {
+    let query = TimetableModel.find({
+        class: { $ne: classId },
+        academicYear,
+        term,
+    })
+        .select('hasUnpublishedChanges draftEntries publishedEntries')
+        .populate({ path: 'draftEntries.teacher', select: 'user', populate: { path: 'user', select: 'firstName lastName' } })
+        .populate({ path: 'publishedEntries.teacher', select: 'user', populate: { path: 'user', select: 'firstName lastName' } });
+    if (session) query = query.session(session);
+    const otherSchedules = await query.lean();
+    const allEntries = [
+        ...entries,
+        ...otherSchedules.flatMap((record) => record.hasUnpublishedChanges
+            ? record.draftEntries || []
+            : record.publishedEntries || []),
+    ].filter((entry) => entry.slotType === 'lesson' && entry.teacher);
+    const teacherIds = [...new Set(allEntries.map((entry) => idOf(entry.teacher)))];
+    const teachers = teacherIds.length
+        ? await attachSession(
+            TeacherModel.find({ _id: { $in: teacherIds } })
+                .select('user')
+                .populate({ path: 'user', select: 'firstName lastName' })
+                .lean(),
+            session,
+        )
+        : [];
+    const names = new Map(teachers.map((teacher) => [
+        idOf(teacher), ((teacher.user?.firstName || '') + ' ' + (teacher.user?.lastName || '')).trim(),
+    ]));
+    const totals = new Map();
+    for (const entry of allEntries) {
+        const teacherId = idOf(entry.teacher);
+        if (!totals.has(teacherId)) {
+            totals.set(teacherId, { teacherId, teacherName: names.get(teacherId) || '', totalLessons: 0, minutes: 0, byDay: Object.fromEntries(DAYS.map((day) => [day, 0])) });
+        }
+        const total = totals.get(teacherId);
+        total.totalLessons += 1;
+        total.minutes += minutesOf(entry.endTime) - minutesOf(entry.startTime);
+        if (Object.hasOwn(total.byDay, entry.dayOfWeek)) total.byDay[entry.dayOfWeek] += 1;
+    }
+    return [...totals.values()].map((item) => {
+        const daily = Object.values(item.byDay);
+        item.dailySpread = Math.max(...daily) - Math.min(...daily);
+        item.needsBalancing = item.dailySpread > 1;
+        return item;
+    }).sort((a, b) => a.teacherName.localeCompare(b.teacherName));
+};
+
 const timetablePopulate = [
     {
         path: 'class',
@@ -294,13 +365,13 @@ const timetablePopulate = [
             { path: 'courses', select: 'courseName courseCode courseType courseStatus' },
         ],
     },
-    { path: 'draftEntries.course', select: 'courseName courseCode' },
+    { path: 'draftEntries.course', select: 'courseName courseCode courseType courseStudents' },
     {
         path: 'draftEntries.teacher',
         select: 'user',
         populate: { path: 'user', select: 'firstName lastName photo isActive' },
     },
-    { path: 'publishedEntries.course', select: 'courseName courseCode' },
+    { path: 'publishedEntries.course', select: 'courseName courseCode courseType courseStudents' },
     {
         path: 'publishedEntries.teacher',
         select: 'user',
@@ -323,6 +394,7 @@ const serializeEntry = (entry) => {
         courseId: course ? idOf(course) : idOf(entry.course) || null,
         courseName: course?.courseName || '',
         courseCode: course?.courseCode || '',
+        courseType: course?.courseType || 'Core',
         teacherId: teacher ? idOf(teacher) : idOf(entry.teacher) || null,
         teacherName: user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() : '',
     };
@@ -361,6 +433,7 @@ module.exports = {
     loadClassForTeacher,
     assertDesignatedClassTeacher,
     validateEntries,
+    getTeacherWorkloadSummary,
     timetablePopulate,
     serializeTimetable,
 };

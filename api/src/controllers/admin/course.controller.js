@@ -38,7 +38,6 @@ const addCourse = async (req, res, next) => {
             courseDescription,
             courseType,
             courseStatus,
-            courseClass,
             courseTeachers,
         } = req.body;
 
@@ -57,19 +56,8 @@ const addCourse = async (req, res, next) => {
             });
         }
 
-        let classId;
-        if (courseClass) {
-            if (!mongoose.Types.ObjectId.isValid(courseClass)) {
-                return res.status(400).json({ message: 'Invalid class ID' });
-            }
-
-            const linkedClass = await ClassModel.findById(courseClass).select('_id');
-            if (!linkedClass) {
-                return res.status(404).json({ message: 'Class not found' });
-            }
-
-            classId = linkedClass._id;
-        }
+        // Courses are school-wide. Keep the legacy courseClass field empty
+        // for newly created courses; Class.courses stores shared references.
 
         const course = await CourseModel.create({
             courseName: courseName.trim(),
@@ -77,15 +65,13 @@ const addCourse = async (req, res, next) => {
             courseDescription: courseDescription?.trim() || '',
             courseType: courseType || 'Core',
             courseStatus: courseStatus || 'Active',
-            courseClass: classId,
+            courseClass: null,
             courseTeachers: parseObjectIds(courseTeachers),
         });
 
-        if (classId) {
-            await ClassModel.findByIdAndUpdate(classId, {
-                $addToSet: { courses: course._id },
-            });
-        }
+        await ClassModel.updateMany({}, {
+            $addToSet: { courses: course._id },
+        });
 
         res.status(201).json({
             message: 'Course created successfully',
@@ -213,6 +199,44 @@ const getCourseById = async (req, res, next) => {
 
 
 
+
+const updateCourseStudents = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid course ID' });
+        }
+        const course = await CourseModel.findById(id);
+        if (!course) return res.status(404).json({ message: 'Course not found' });
+
+        const rawIds = req.body?.studentIds;
+        if (!Array.isArray(rawIds)) {
+            return res.status(400).json({ message: 'Student IDs must be provided as an array' });
+        }
+        const studentIds = parseObjectIds(rawIds);
+        if (studentIds.length !== rawIds.length) {
+            return res.status(400).json({ message: 'One or more student IDs are invalid' });
+        }
+        const StudentModel = require('../../models/student.model.js');
+        const found = studentIds.length
+            ? await StudentModel.find({ _id: { $in: studentIds } }).select('_id')
+            : [];
+        if (found.length !== studentIds.length) {
+            return res.status(404).json({ message: 'One or more students were not found' });
+        }
+
+        course.courseStudents = studentIds;
+        await course.save();
+        const populated = await CourseModel.findById(course._id)
+            .populate({ path: 'courseStudents', populate: { path: 'user', select: 'firstName lastName email photo isActive' } })
+            .populate({ path: 'courseTeachers', populate: { path: 'user', select: 'firstName lastName email photo isActive' } })
+            .lean();
+        res.json({ message: 'Course student enrolment updated successfully', course: populated });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const updateCourse = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -232,7 +256,6 @@ const updateCourse = async (req, res, next) => {
             courseDescription,
             courseType,
             courseStatus,
-            courseClass,
             courseTeachers,
         } = req.body;
 
@@ -255,53 +278,23 @@ const updateCourse = async (req, res, next) => {
             });
         }
 
-        let nextClassId = course.courseClass || null;
-
-        if (courseClass !== undefined) {
-            if (!courseClass) {
-                nextClassId = null;
-            } else {
-                if (!mongoose.Types.ObjectId.isValid(courseClass)) {
-                    return res.status(400).json({ message: 'Invalid class ID' });
-                }
-
-                const linkedClass = await ClassModel.findById(courseClass).select('_id');
-                if (!linkedClass) {
-                    return res.status(404).json({ message: 'Class not found' });
-                }
-
-                nextClassId = linkedClass._id;
-            }
-        }
-
-        const previousClassId = course.courseClass
-            ? course.courseClass.toString()
-            : null;
-        const nextClassIdStr = nextClassId ? nextClassId.toString() : null;
+        // Class assignment is no longer exclusive; class arrays may safely
+        // reference this shared course from multiple classes.
 
         course.courseName = courseName.trim();
         course.courseCode = normalizedCode;
         course.courseDescription = courseDescription?.trim() || '';
         if (courseType !== undefined) course.courseType = courseType;
         if (courseStatus !== undefined) course.courseStatus = courseStatus;
-        if (courseClass !== undefined) course.courseClass = nextClassId;
         if (courseTeachers !== undefined) {
             course.courseTeachers = parseObjectIds(courseTeachers);
         }
 
         await course.save();
-
-        if (previousClassId !== nextClassIdStr) {
-            if (previousClassId) {
-                await ClassModel.findByIdAndUpdate(previousClassId, {
-                    $pull: { courses: course._id },
-                });
-            }
-            if (nextClassId) {
-                await ClassModel.findByIdAndUpdate(nextClassId, {
-                    $addToSet: { courses: course._id },
-                });
-            }
+        if (course.courseStatus === 'Active') {
+            await ClassModel.updateMany({}, {
+                $addToSet: { courses: course._id },
+            });
         }
 
         const populated = await CourseModel.findById(course._id)
@@ -332,4 +325,4 @@ const updateCourse = async (req, res, next) => {
 }
 
 
-module.exports = { addCourse, getCourses, getCourseById, updateCourse };
+module.exports = { addCourse, getCourses, getCourseById, updateCourse, updateCourseStudents };

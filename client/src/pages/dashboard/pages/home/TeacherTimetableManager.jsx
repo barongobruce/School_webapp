@@ -46,6 +46,7 @@ const TeacherTimetableManager = ({ classes = [] }) => {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [conflicts, setConflicts] = useState([])
+  const [teacherWorkload, setTeacherWorkload] = useState([])
 
   useEffect(() => {
     if (!classes.length) return
@@ -65,6 +66,7 @@ const TeacherTimetableManager = ({ classes = [] }) => {
     setError('')
     setMessage('')
     setConflicts([])
+    setTeacherWorkload([])
 
     if (!classId || !academicYear.trim() || !term.trim()) {
       setLoading(false)
@@ -80,6 +82,7 @@ const TeacherTimetableManager = ({ classes = [] }) => {
       setClassInfo(response.class)
       setRecord(response.timetable)
       setAvailableCourses(response.class?.availableCourses || [])
+      setTeacherWorkload(response.teacherWorkload || [])
       setEntries(response.timetable?.draftEntries || [])
       setForm(emptyEntry())
       setEditingKey('')
@@ -195,6 +198,7 @@ const TeacherTimetableManager = ({ classes = [] }) => {
       setRecord(response.timetable)
       setEntries(response.timetable?.draftEntries || entries)
       setConflicts(response.teacherConflictWarnings || [])
+      setTeacherWorkload(response.teacherWorkload || [])
       setMessage(response.message || 'Draft saved; viewers still see the published timetable.')
     } catch (err) {
       if (err.status === 403) {
@@ -223,6 +227,7 @@ const TeacherTimetableManager = ({ classes = [] }) => {
       })
       setRecord(saved.timetable)
       setConflicts(saved.teacherConflictWarnings || [])
+      setTeacherWorkload(saved.teacherWorkload || [])
       const response = await publishTeacherTimetable(classId, {
         academicYear: academicYear.trim(),
         term: term.trim(),
@@ -308,6 +313,28 @@ const TeacherTimetableManager = ({ classes = [] }) => {
             <p><b>Academic year / term:</b> {academicYear} · {term}</p>
             <p className='sm:col-span-2'><b>Subjects:</b> {availableCourses.map((item) => item.courseName).filter(Boolean).join(', ') || '—'}</p>
           </div>
+
+          {teacherWorkload.length ? (
+            <div className={card + ' space-y-3'} style={radius}>
+              <div>
+                <h3 className='text-[14px] font-semibold text-gray-900 dark:text-white'>Teacher workload · {academicYear} · {term}</h3>
+                <p className='mt-1 text-[11px] text-gray-500 dark:text-gray-400'>Lesson counts across all class timetables for this term. A spread above one lesson is flagged to help balance the week.</p>
+              </div>
+              <div className='grid gap-2 sm:grid-cols-2 xl:grid-cols-3'>
+                {teacherWorkload.map((item) => (
+                  <div key={item.teacherId} className='rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 dark:border-white/10 dark:bg-white/5'>
+                    <div className='flex items-center justify-between gap-2'>
+                      <span className='truncate text-[12px] font-semibold text-gray-800 dark:text-gray-100'>{item.teacherName || 'Teacher'}</span>
+                      {item.needsBalancing ? <span className='shrink-0 text-[10px] font-semibold text-amber-700 dark:text-amber-300'>Review balance</span> : null}
+                    </div>
+                    <p className='mt-1 text-[10px] leading-relaxed text-gray-500 dark:text-gray-400'>
+                      {Object.entries(item.byDay || {}).map(([day, count]) => day.slice(0, 3) + ' ' + count).join(' · ')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           <DashboardTimetable lessons={calendarLessons} title='Timetable draft preview' showMeta />
 

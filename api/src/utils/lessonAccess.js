@@ -84,6 +84,7 @@ const resolveAccessContext = async (user) => {
                 teacherId: null,
                 studentId: null,
                 guardianId: null,
+                studentIds: [],
                 classIds: [],
             };
         }
@@ -114,6 +115,7 @@ const resolveAccessContext = async (user) => {
             role: 'student',
             teacherId: null,
             studentId: student?._id || null,
+            studentIds: student?._id ? [student._id] : [],
             guardianId: null,
             classIds: student?.class ? [student.class.toString()] : [],
         };
@@ -137,7 +139,7 @@ const resolveAccessContext = async (user) => {
         const wards = await StudentModel.find({
             _id: { $in: guardian.students || [] },
         })
-            .select('class')
+            .select('_id class')
             .lean();
 
         return {
@@ -145,6 +147,7 @@ const resolveAccessContext = async (user) => {
             teacherId: null,
             studentId: null,
             guardianId: guardian._id,
+            studentIds: wards.map((ward) => ward._id),
             classIds: uniqueIds(wards.map((ward) => ward.class)),
         };
     }
@@ -230,26 +233,29 @@ const canAccessLesson = (lesson, context) => {
 
 const getAccessibleCourses = async (context) => {
     const courseMap = new Map();
+    const classIds = (context.classIds || []).filter((id) => mongoose.Types.ObjectId.isValid(id));
 
-    if (context.classIds.length) {
-        const classes = await ClassModel.find({
-            _id: { $in: context.classIds },
-            isActive: true,
-        })
-            .select('className classCode courses')
-            .populate({
-                path: 'courses',
-                match: { courseStatus: 'Active' },
-                select: 'courseName courseCode courseType courseStatus courseClass',
-            })
-            .lean();
-
+    if (classIds.length) {
+        const [classes, courses] = await Promise.all([
+            ClassModel.find({ _id: { $in: classIds }, isActive: true })
+                .select('className classCode')
+                .lean(),
+            CourseModel.find({ courseStatus: 'Active' })
+                .select('courseName courseCode courseType courseStudents')
+                .sort({ courseName: 1 })
+                .lean(),
+        ]);
+        const studentIds = new Set((context.studentIds || (context.studentId ? [context.studentId] : []))
+            .map((id) => String(id)));
         for (const classItem of classes) {
-            for (const course of classItem.courses || []) {
-                if (!course?._id) continue;
+            for (const course of courses) {
+                const isElective = String(course.courseType || 'Core') !== 'Core';
+                if (isElective && ['student', 'guardian'].includes(context.role)) {
+                    const enrolled = (course.courseStudents || []).some((id) => studentIds.has(String(id)));
+                    if (!enrolled) continue;
+                }
                 const id = String(course._id);
                 if (courseMap.has(id)) continue;
-
                 courseMap.set(id, {
                     id,
                     _id: course._id,
@@ -276,12 +282,9 @@ const getAccessibleCourses = async (context) => {
         for (const course of teacherCourses) {
             const id = String(course._id);
             if (courseMap.has(id)) continue;
-
-            const classItem =
-                course.courseClass && typeof course.courseClass === 'object'
-                    ? course.courseClass
-                    : null;
-
+            const classItem = course.courseClass && typeof course.courseClass === 'object'
+                ? course.courseClass
+                : null;
             courseMap.set(id, {
                 id,
                 _id: course._id,
@@ -295,9 +298,7 @@ const getAccessibleCourses = async (context) => {
         }
     }
 
-    return [...courseMap.values()].sort((a, b) =>
-        a.courseName.localeCompare(b.courseName)
-    );
+    return [...courseMap.values()].sort((a, b) => a.courseName.localeCompare(b.courseName));
 };
 
 module.exports = {

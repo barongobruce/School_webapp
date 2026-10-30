@@ -4,7 +4,7 @@ const {handleTeacherUpload, handleClassUpload, handleStudentUpload, handleGuardi
 const {loginAdmin, getMe, changePassword, updateMyPhoto} = require('../controllers/admin/admin.controller.js');
 const {addTeacher, getTeachers, getTeacherById, updateTeacher, setTeacherStatus} = require('../controllers/admin/teacher.controller.js');
 const {addClass, getClasses, getClassById, updateClass} = require('../controllers/admin/class.controller.js');
-const {addCourse, getCourses, getCourseById, updateCourse} = require('../controllers/admin/course.controller.js');
+const {addCourse, getCourses, getCourseById, updateCourse, updateCourseStudents} = require('../controllers/admin/course.controller.js');
 const {addStudent, getStudents, getStudentById, updateStudent, setStudentStatus} = require('../controllers/admin/student.controller.js');
 const {addAnnouncement, getAnnouncements, getAnnouncementById, updateAnnouncement} = require('../controllers/admin/announcement.controller.js');
 const {getGuardians, getGuardianById, addGuardian, updateGuardian, setGuardianStatus} = require('../controllers/admin/guardian.controller.js');
@@ -45,6 +45,7 @@ router.post('/courses', addCourse);
 router.get('/courses', getCourses);
 router.get('/courses/:id', getCourseById);
 router.patch('/courses/:id', updateCourse);
+router.patch('/courses/:id/enrolments', updateCourseStudents);
 
 // STUDENTS ROUTES for admin
 router.post('/students', handleStudentUpload, addStudent);

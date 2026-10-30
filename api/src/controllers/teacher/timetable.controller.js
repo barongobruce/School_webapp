@@ -8,6 +8,7 @@ const {
     loadClassForTeacher,
     assertDesignatedClassTeacher,
     validateEntries,
+    getTeacherWorkloadSummary,
     timetablePopulate,
     serializeTimetable,
 } = require('../../utils/timetableAccess.js');
@@ -23,18 +24,9 @@ const getTeacherTimetableForEditing = async (req, res, next) => {
         const classItem = await loadClassForTeacher(req.params.classId, req.teacher);
         assertDesignatedClassTeacher(classItem, req.teacher);
 
-        const classTeacherIds = new Set(
-            (classItem.teachers || []).map((teacher) =>
-                String(teacher._id || teacher),
-            ),
-        );
-        const classCourses = await CourseModel.find({
-            courseStatus: 'Active',
-            $or: [
-                { _id: { $in: classItem.courses || [] } },
-                { courseClass: classItem._id },
-            ],
-        })
+        // The course catalogue is shared by every class. Eligibility still
+        // requires the selected teacher to be assigned to this class.
+        const classCourses = await CourseModel.find({ courseStatus: 'Active' })
             .select('_id courseName courseCode courseTeachers')
             .populate({
                 path: 'courseTeachers',
@@ -51,22 +43,11 @@ const getTeacherTimetableForEditing = async (req, res, next) => {
             courseName: course.courseName || '',
             courseCode: course.courseCode || '',
             teachers: (course.courseTeachers || [])
-                .filter((teacher) => {
-                    const teacherId = String(teacher._id);
-                    const assignedToClass =
-                        classTeacherIds.has(teacherId) ||
-                        (teacher.classes || []).some(
-                            (assignedClassId) =>
-                                String(assignedClassId._id || assignedClassId) ===
-                                String(classItem._id),
-                        );
-                    return (
-                        assignedToClass &&
-                        teacher.user &&
-                        teacher.user.isActive === true &&
-                        teacher.user.isDeleted !== true
-                    );
-                })
+                .filter((teacher) =>
+                    teacher.user &&
+                    teacher.user.isActive === true &&
+                    teacher.user.isDeleted !== true,
+                )
                 .map((teacher) => ({
                     id: String(teacher._id),
                     name: `${teacher.user.firstName || ''} ${teacher.user.lastName || ''}`.trim(),
@@ -78,8 +59,17 @@ const getTeacherTimetableForEditing = async (req, res, next) => {
             class: classItem._id, academicYear, term,
         }).populate(timetablePopulate).lean();
 
+        const teacherWorkload = await getTeacherWorkloadSummary({
+            classId: classItem._id,
+            academicYear,
+            term,
+            entries: timetable?.draftEntries?.length
+                ? timetable.draftEntries
+                : timetable?.publishedEntries || [],
+        });
         res.json({
             timetable: timetable ? serializeTimetable(timetable) : null,
+            teacherWorkload,
             class: {
                 id: String(classItem._id),
                 className: classItem.className,
@@ -109,7 +99,7 @@ const saveTimetableDraft = async (req, res, next) => {
             academicYear,
             term,
             allowEmpty: true,
-            rejectTeacherConflicts: false,
+            rejectTeacherConflicts: true,
         });
 
         const timetable = await TimetableModel.findOneAndUpdate(
@@ -127,9 +117,16 @@ const saveTimetableDraft = async (req, res, next) => {
             { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true },
         ).populate(timetablePopulate).lean();
 
+        const teacherWorkload = await getTeacherWorkloadSummary({
+            classId: classItem._id,
+            academicYear,
+            term,
+            entries,
+        });
         res.json({
             message: 'Draft saved. Students and guardians still see only the last published timetable.',
             teacherConflictWarnings: conflicts,
+            teacherWorkload,
             timetable: serializeTimetable(timetable),
         });
     } catch (error) {

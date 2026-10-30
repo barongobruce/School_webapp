@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BookOpen,
   FileText,
-  GraduationCap,
   Hash,
   Layers3,
   UserRound,
@@ -17,7 +16,6 @@ import Button from '../../../components/Button'
 import IconInput from '../../../components/IconInput'
 import Select from '../../../components/Select'
 import { updateCourse } from '../../../lib/course.requests'
-import { getClasses } from '../../../lib/class.requests'
 import { getTeachers } from '../../../lib/teacher.requests'
 
 const COURSE_TYPES = ['Core', 'Elective', 'Optional']
@@ -223,14 +221,6 @@ const ProgressRail = ({ step, onJump }) => (
   </nav>
 )
 
-const getClassId = (course) => {
-  if (!course.courseClass) return ''
-  if (typeof course.courseClass === 'object') {
-    return course.courseClass._id || ''
-  }
-  return String(course.courseClass)
-}
-
 const getTeacherId = (course) => {
   const teachers = course.courseTeachers || []
   if (!teachers.length) return ''
@@ -245,7 +235,6 @@ const courseToForm = (course) => ({
   courseDescription: course.courseDescription ?? '',
   courseType: course.courseType ?? 'Core',
   courseStatus: course.courseStatus ?? 'Active',
-  courseClass: getClassId(course),
   courseTeacher: getTeacherId(course),
 })
 
@@ -253,29 +242,10 @@ const EditCourse = ({ course, onSuccess }) => {
   const { close } = useModal()
   const [step, setStep] = useState(0)
   const [form, setForm] = useState(() => courseToForm(course))
-  const [classes, setClasses] = useState([])
   const [teachers, setTeachers] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [stepKey, setStepKey] = useState(0)
-
-  const classOptions = useMemo(
-    () => [
-      {
-        value: '',
-        label: 'No class assigned',
-        description: 'Optional',
-      },
-      ...classes.map((classItem) => ({
-        value: classItem._id,
-        label: classItem.className,
-        description: classItem.classCode
-          ? `Code ${classItem.classCode}`
-          : 'Active class',
-      })),
-    ],
-    [classes],
-  )
 
   const teacherOptions = useMemo(
     () => [
@@ -298,16 +268,12 @@ const EditCourse = ({ course, onSuccess }) => {
 
     const loadOptions = async () => {
       try {
-        const [classesData, teachersData] = await Promise.all([
-          getClasses({ isActive: true }),
-          getTeachers(),
-        ])
+        const teachersData = await getTeachers()
         if (cancelled) return
-        setClasses(classesData.classes || [])
         setTeachers(teachersData.teachers || [])
       } catch {
         if (!cancelled) {
-          setError('Failed to load classes or teachers.')
+          setError('Failed to load teachers.')
         }
       }
     }
@@ -370,7 +336,6 @@ const EditCourse = ({ course, onSuccess }) => {
       courseDescription: form.courseDescription.trim(),
       courseType: form.courseType,
       courseStatus: form.courseStatus,
-      courseClass: form.courseClass || '',
       courseTeachers: form.courseTeacher ? [form.courseTeacher] : [],
     }
 
@@ -494,19 +459,10 @@ const EditCourse = ({ course, onSuccess }) => {
 
             {step === 2 && (
               <div className='grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2'>
-                <Field label='Class' id='edit-course-courseClass'>
-                  <Select
-                    id='edit-course-courseClass'
-                    name='courseClass'
-                    placeholder='Select class'
-                    searchPlaceholder='Search classes…'
-                    icon={GraduationCap}
-                    value={form.courseClass}
-                    onChange={handleChange}
-                    options={classOptions}
-                    emptyMessage='No classes available'
-                  />
-                </Field>
+                <div className='form-field border p-3 text-[12px] text-gray-600 dark:text-gray-300' style={panelRadius}>
+                  <span className='font-semibold text-gray-800 dark:text-gray-100'>Available to every class</span>
+                  <p className='mt-1 text-[11px] text-gray-500 dark:text-gray-400'>This subject is shared by all classes. Edit its course teachers below if assignments change.</p>
+                </div>
                 <Field label='Teacher' id='edit-course-courseTeacher'>
                   <Select
                     id='edit-course-courseTeacher'

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const TimetableModel = require('../../models/timetable.model.js');
+const StudentModel = require('../../models/student.model.js');
 const { resolveAccessContext } = require('../../utils/lessonAccess.js');
 const { timetablePopulate, serializeTimetable } = require('../../utils/timetableAccess.js');
 
@@ -23,8 +24,28 @@ const getMyTimetables = async (req, res, next) => {
             .sort({ academicYear: -1, term: 1 })
             .lean();
 
+        let visibleStudentIds = [];
+        if (role === 'student' && context.studentId) {
+            visibleStudentIds = [String(context.studentId)];
+        } else if (role === 'guardian' && context.guardianId) {
+            const wards = await StudentModel.find({
+                guardian: context.guardianId,
+                class: { $in: classIds },
+            }).select('_id').lean();
+            visibleStudentIds = wards.map((ward) => String(ward._id));
+        }
+        const visibleStudentIdSet = new Set(visibleStudentIds);
+
         const timetables = records.map((record) => {
-            const item = serializeTimetable(record);
+            const publishedEntries = (record.publishedEntries || []).filter((entry) => {
+                if (role === 'teacher' || entry.slotType !== 'lesson') return true;
+                const course = entry.course;
+                if (!course || String(course.courseType || 'Core') === 'Core') return true;
+                return (course.courseStudents || []).some((student) =>
+                    visibleStudentIdSet.has(String(student._id || student)),
+                );
+            });
+            const item = serializeTimetable({ ...record, publishedEntries });
             const entries = role === 'teacher'
                 ? item.publishedEntries.filter(
                     (entry) => entry.teacherId === String(context.teacherId),

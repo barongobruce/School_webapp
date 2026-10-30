@@ -162,7 +162,7 @@ const ViewToggle = ({ view, onChange }) => (
   </div>
 )
 
-const LessonBlock = ({ lesson, top, height, showMeta = false }) => {
+const LessonBlock = ({ lesson, top, height, showMeta = false, lane = 0, laneCount = 1 }) => {
   const start = new Date(lesson.scheduledAt)
   const duration = Math.max(Number(lesson.durationMinutes) || 45, 15)
   const end = new Date(start.getTime() + duration * 60_000)
@@ -172,9 +172,11 @@ const LessonBlock = ({ lesson, top, height, showMeta = false }) => {
     lesson.teacher,
     lesson.room,
   ].filter(Boolean).join(' · ')
-  const className = `absolute inset-x-0.5 flex flex-col justify-center overflow-hidden px-1.5 py-0.5 transition-shadow ${tone.bg}`
+  const className = `absolute flex flex-col justify-center overflow-hidden px-1.5 py-0.5 transition-shadow ${tone.bg}`
   const style = {
     top,
+    left: `calc(${(lane * 100) / laneCount}% + 1px)`,
+    width: `calc(${100 / laneCount}% - 2px)`,
     height: Math.max(height, 22),
     borderRadius: '0.5rem 0.15rem 0.5rem 0.15rem',
   }
@@ -253,20 +255,46 @@ const DayColumn = ({
           style={{ top: index * HOUR_HEIGHT }}
         />
       ))}
-      {lessons.map((lesson) => {
-        const start = new Date(lesson.scheduledAt)
-        const duration = Math.max(Number(lesson.durationMinutes) || 45, 15)
-        const { top, height } = positionFor(start, duration)
-        return (
-          <LessonBlock
-            key={lesson.id || lesson._id}
-            lesson={lesson}
-            top={Math.max(top, 0)}
-            height={height}
-            showMeta={showMeta}
-          />
-        )
-      })}
+      {(() => {
+        const sorted = lessons.map((lesson) => {
+          const start = new Date(lesson.scheduledAt)
+          const duration = Math.max(Number(lesson.durationMinutes) || 45, 15)
+          const end = new Date(start.getTime() + duration * 60_000)
+          return { lesson, start, end, duration }
+        }).sort((a, b) => a.start - b.start || a.end - b.end)
+        const clusters = []
+        for (const item of sorted) {
+          const last = clusters[clusters.length - 1]
+          if (!last || item.start >= last.end) clusters.push({ end: item.end, items: [item] })
+          else {
+            last.items.push(item)
+            if (item.end > last.end) last.end = item.end
+          }
+        }
+        return clusters.flatMap((cluster) => {
+          const laneEnds = []
+          const assigned = cluster.items.map((item) => {
+            let lane = laneEnds.findIndex((end) => end <= item.start)
+            if (lane < 0) lane = laneEnds.length
+            laneEnds[lane] = item.end
+            return { ...item, lane }
+          })
+          return assigned.map(({ lesson, start, duration, lane }) => {
+            const { top, height } = positionFor(start, duration)
+            return (
+              <LessonBlock
+                key={lesson.id || lesson._id}
+                lesson={lesson}
+                top={Math.max(top, 0)}
+                height={height}
+                showMeta={showMeta}
+                lane={lane}
+                laneCount={laneEnds.length}
+              />
+            )
+          })
+        })
+      })()}
     </div>
   )
 }

@@ -46,3 +46,15 @@ export const updateCourse = async (id, courseData) => {
     throw new Error(getErrorMessage(error))
   }
 }
+
+export const updateCourseStudents = async (id, studentIds) => {
+  try {
+    const { data } = await api.patch(
+      `/api/admin/courses/${id}/enrolments`,
+      { studentIds },
+    )
+    return data
+  } catch (error) {
+    throw new Error(getErrorMessage(error))
+  }
+}
