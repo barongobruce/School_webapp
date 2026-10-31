@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   PanelLeftClose,
   PanelLeftOpen,
+  MoreVertical,
   Megaphone,
   ChevronRight,
 } from 'lucide-react'
@@ -135,6 +136,7 @@ const NavIconButton = ({
   children,
   active = false,
   badge,
+  expanded,
 }) => {
   const className = [
     'relative grid size-9 place-items-center transition-all duration-200',
@@ -171,6 +173,8 @@ const NavIconButton = ({
     <button
       type='button'
       aria-label={label}
+      aria-expanded={expanded}
+      aria-controls={expanded === undefined ? undefined : 'dashboard-navigation'}
       onClick={onClick}
       className={className}
       style={chipRadius}
@@ -237,14 +241,16 @@ const DashboardNavbar = () => {
     <nav className='flex items-center justify-between gap-3 sm:gap-4'>
       <div className='flex min-w-0 items-center gap-2.5 sm:gap-3'>
         <NavIconButton
-          label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          label={isSidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
           onClick={() => dispatch(toggleSidebar())}
           active={!isSidebarOpen}
+          expanded={isSidebarOpen}
         >
+          <MoreVertical className='size-5 md:hidden' strokeWidth={2.25} />
           {isSidebarOpen ? (
-            <PanelLeftClose className='size-4' strokeWidth={1.75} />
+            <PanelLeftClose className='hidden size-4 md:block' strokeWidth={1.75} />
           ) : (
-            <PanelLeftOpen className='size-4' strokeWidth={1.75} />
+            <PanelLeftOpen className='hidden size-4 md:block' strokeWidth={1.75} />
           )}
         </NavIconButton>
 

@@ -102,6 +102,11 @@ const AppSidebar = () => {
                 to={item.path}
                 end={item.path === '/'}
                 title={!isSidebarOpen ? item.label : undefined}
+                onClick={() => {
+                  if (window.matchMedia('(max-width: 767px)').matches) {
+                    dispatch(setSidebarOpen(false))
+                  }
+                }}
                 className={linkClass}
                 style={{ borderRadius: '1.1rem 0.35rem 1.1rem 0.35rem' }}
               >

@@ -29,10 +29,17 @@ const initialModalState = {
   showCloseButton: true,
 }
 
+const initialSidebarOpen = () => {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    return true
+  }
+  return window.matchMedia('(min-width: 1024px)').matches
+}
+
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    isSidebarOpen: true,
+    isSidebarOpen: initialSidebarOpen(),
     modal: { ...initialModalState },
   },
   reducers: {

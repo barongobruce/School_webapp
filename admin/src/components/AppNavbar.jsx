@@ -8,6 +8,7 @@ import {
   Moon,
   Sun,
   ChevronRight,
+  MoreVertical,
 } from 'lucide-react'
 import { toggleSidebar } from '../store/slices/uiSlice'
 import { formatAdminRole, getAdminFullName } from '../lib/auth'
@@ -135,14 +136,15 @@ const AppNavbar = () => {
     <nav className='flex items-center justify-between gap-3 sm:gap-4'>
       <div className='flex min-w-0 items-center gap-2.5 sm:gap-3'>
         <NavIconButton
-          label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          label={isSidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
           onClick={() => dispatch(toggleSidebar())}
           active={!isSidebarOpen}
         >
+          <MoreVertical className='size-4 md:hidden' strokeWidth={2} />
           {isSidebarOpen ? (
-            <PanelLeftClose className='size-4' strokeWidth={1.75} />
+            <PanelLeftClose className='hidden size-4 md:block' strokeWidth={1.75} />
           ) : (
-            <PanelLeftOpen className='size-4' strokeWidth={1.75} />
+            <PanelLeftOpen className='hidden size-4 md:block' strokeWidth={1.75} />
           )}
         </NavIconButton>
 

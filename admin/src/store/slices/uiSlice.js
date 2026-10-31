@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const initialSidebarOpen =
+  typeof window === 'undefined'
+    ? true
+    : window.matchMedia('(min-width: 1024px)').matches
+
 const initialModalState = {
   isOpen: false,
   title: '',
@@ -13,7 +18,7 @@ const initialModalState = {
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    isSidebarOpen: true,
+    isSidebarOpen: initialSidebarOpen,
     modal: { ...initialModalState },
   },
   reducers: {
